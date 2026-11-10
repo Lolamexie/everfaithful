@@ -834,8 +834,17 @@ function favButton(e){
   b.onclick=ev=>{ev.stopPropagation();const r=state.entries.find(x=>x.id===e.id);if(!r)return;r.fav=!r.fav;if(!r.fav)delete r.fav;if(!persist())return;b.setAttribute("aria-pressed",String(!!r.fav));toast(r.fav?"Added to favourites":"Removed from favourites");};
   return b;
 }
+/* keep the name on one line (two for long names): shrink the type a little on narrow phones */
+function fitGreeting(){
+  const h=$("#greetH"), sp=$("#greeting"); if(!h||!sp) return;
+  h.style.fontSize=""; if(!sp.getClientRects().length) return;
+  const max=sp.textContent.length>20?2:1; let fs=parseFloat(getComputedStyle(h).fontSize), n=0;
+  while(sp.getClientRects().length>max&&fs>24&&n<24){fs-=1;h.style.fontSize=fs+"px";n++;}
+}
+try{document.fonts.ready.then(fitGreeting);}catch(e){}
+window.addEventListener("resize",()=>{try{fitGreeting();}catch(e){}});
 function render(){
-  const nm=nameOfTheDay(today); $("#greeting").textContent=nm[0]; $("#greetH").classList.toggle("long",nm[0].length>20); $("#greetRef").textContent=nm[1];
+  const nm=nameOfTheDay(today); $("#greeting").textContent=nm[0]; $("#greetH").classList.toggle("long",nm[0].length>20); $("#greetRef").textContent=nm[1]; fitGreeting();
   const list=entries();
   const ym=iso(today).slice(0,7);
   countTo($("#mannaCount"),list.filter(e=>e.type==="manna"&&e.date.slice(0,7)===ym).length);
