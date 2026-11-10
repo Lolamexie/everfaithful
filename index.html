@@ -51,6 +51,14 @@
 @font-face{font-family:"Source Serif 4";font-style:normal;font-weight:500;font-display:swap;src:url(./fonts/source-serif-4-latin-500-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 @font-face{font-family:"Source Serif 4";font-style:normal;font-weight:500;font-display:swap;src:url(./fonts/source-serif-4-latin-ext-500-normal.woff2) format("woff2");unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:"Source Serif 4";font-style:normal;font-weight:500;font-display:swap;src:url(./fonts/source-serif-4-vietnamese-500-normal.woff2) format("woff2");unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:"EB Garamond";font-style:normal;font-weight:400;font-display:swap;src:url(./fonts/eb-garamond-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"EB Garamond";font-style:normal;font-weight:400;font-display:swap;src:url(./fonts/eb-garamond-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"EB Garamond";font-style:italic;font-weight:400;font-display:swap;src:url(./fonts/eb-garamond-latin-400-italic.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"EB Garamond";font-style:italic;font-weight:400;font-display:swap;src:url(./fonts/eb-garamond-latin-ext-400-italic.woff2) format("woff2");unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"EB Garamond";font-style:normal;font-weight:500;font-display:swap;src:url(./fonts/eb-garamond-latin-500-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"EB Garamond";font-style:normal;font-weight:500;font-display:swap;src:url(./fonts/eb-garamond-latin-ext-500-normal.woff2) format("woff2");unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"EB Garamond";font-style:normal;font-weight:600;font-display:swap;src:url(./fonts/eb-garamond-latin-600-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"EB Garamond";font-style:normal;font-weight:600;font-display:swap;src:url(./fonts/eb-garamond-latin-ext-600-normal.woff2) format("woff2");unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 </style>
 </head>
 <body>
@@ -141,6 +149,7 @@ h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:
 .greet .hello-name.long{font-size:clamp(30px,8.6vw,38px)}
 .greet .hello-tag{margin-top:14px}
 .alert-text{color:var(--alert)}
+.keep-text{color:var(--teal);font-weight:800}
 .tally{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--glow)}
@@ -183,6 +192,21 @@ h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:
 .manna{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-align:left;width:100%}
 .manna .drop{flex:none;width:14px;height:14px;margin-top:5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff7d6,var(--gold) 60%);box-shadow:0 0 14px var(--glow)}
 .manna .m-body{flex:1;min-width:0}
+.manna-row{position:relative}
+.manna-row .manna{padding-right:58px}
+.fav-btn{position:absolute;top:4px;right:4px;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:none;border:0;color:var(--muted);cursor:pointer}
+.fav-btn svg{width:22px;height:22px}
+.fav-btn[aria-pressed="true"]{color:#D9A62E}
+.fav-btn[aria-pressed="true"] svg{fill:currentColor}
+.cover-pick{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cover-opt{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 8px;border-radius:16px;border:2px solid var(--line);background:var(--surface);font:600 14px var(--f-body);color:var(--fg);cursor:pointer}
+.cover-opt[aria-pressed="true"]{border-color:var(--clay-line);background:var(--clay-chip);color:var(--clay-ink)}
+.mini{width:62px;height:88px;border-radius:3px;display:grid;place-items:center;box-shadow:0 4px 10px rgba(0,0,0,.18);position:relative}
+.mini:before{content:"";position:absolute;inset:4px;border:1px solid #C9A85A;border-radius:1px}
+.mini-t{font:500 8.5px/1.15 "EB Garamond",Georgia,serif;text-align:center}
+.mini-classic{background:#FBF7EE;color:#2A2621}
+.mini-green{background:#1F3A27;color:#F0D78A}
+.mini-green:before{border-color:rgba(233,188,46,.5);border-radius:2px}
 .manna .m-text{margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .manna .m-date{font-size:13px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
 .ex{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lilac);border:1px solid var(--lilac);border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:1px}
@@ -800,6 +824,13 @@ function renderFacing(list){
 const NAMES=[["chosen one","1 Pet 2:9"],["beloved of God","Rom 1:7"],["living stone","1 Pet 2:5"],["child of God","John 1:12"],["fearfully and wonderfully made","Ps 139:14"],["more than a conqueror","Rom 8:37"],["the apple of His eye","Zech 2:8"],["God's masterpiece","Eph 2:10"],["friend of Jesus","John 15:15"],["the light of the world","Matt 5:14"],["royal priesthood","1 Pet 2:9"],["holy and dearly loved","Col 3:12"],["heir of God","Rom 8:17"],["new creation","2 Cor 5:17"],["redeemed one","Isa 43:1"],["the head, not the tail","Deut 28:13"],["precious and honoured","Isa 43:4"],["the salt of the earth","Matt 5:13"],["God's delight","Zeph 3:17"],["free indeed","John 8:36"],["joint heir with Christ","Rom 8:17"],["engraved on His palms","Isa 49:16"],["forgiven","Eph 1:7"],["temple of the Holy Spirit","1 Cor 6:19"],["loved with an everlasting love","Jer 31:3"],["ambassador for Christ","2 Cor 5:20"],["God's treasured possession","Deut 7:6"],["overcomer","1 John 5:4"],["citizen of heaven","Phil 3:20"],["accepted in the Beloved","Eph 1:6"],["sheep of His pasture","Ps 100:3"],["blessed","Eph 1:3"],["branch of the true vine","John 15:5"],["the righteousness of God","2 Cor 5:21"],["crown of glory","Isa 62:3"],["sealed by the Spirit","Eph 1:13"],["complete in Him","Col 2:10"],["healed","1 Pet 2:24"],["never forsaken","Heb 13:5"],["a city on a hill","Matt 5:14"],["kept by His power","1 Pet 1:5"],["favoured","Ps 5:12"],["saint","Eph 1:1"],["God's special possession","1 Pet 2:9"]];
 /* one name per calendar day on this phone: the same all day, whatever time or how often the app is opened */
 function nameOfTheDay(d){const day=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);const k=day-20767;/* 10 Nov 2026 shows name 1 */return NAMES[((k%NAMES.length)+NAMES.length)%NAMES.length];}
+/* favourite manna: starred ones can go in the book on their own */
+const STAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6l2.55 5.2 5.75.84-4.15 4.05.98 5.7L12 16.7l-5.13 2.69.98-5.7L3.7 9.64l5.75-.84z"/></svg>';
+function favButton(e){
+  const b=el("button",{type:"button",class:"fav-btn","aria-pressed":String(!!e.fav),"aria-label":"Favourite",html:STAR});
+  b.onclick=ev=>{ev.stopPropagation();const r=state.entries.find(x=>x.id===e.id);if(!r)return;r.fav=!r.fav;if(!r.fav)delete r.fav;if(!persist())return;b.setAttribute("aria-pressed",String(!!r.fav));toast(r.fav?"Added to favourites":"Removed from favourites");};
+  return b;
+}
 function render(){
   const nm=nameOfTheDay(today); $("#greeting").textContent=nm[0]; $("#greetH").classList.toggle("long",nm[0].length>20); $("#greetRef").textContent=nm[1];
   const list=entries();
@@ -978,7 +1009,8 @@ function renderList(list){
       if(m!==cur){cur=m;box=el("div",{class:"month"},el("h3",{text:monthLabel(e.date)}));wrap.append(box);}
       const t=el("p",{class:"m-text"}); t.textContent=e.text;
       const d=el("div",{class:"m-date",text:niceDate(e.date)}); if(e.example)d.append(el("span",{class:"ex",text:"Example"}));
-      box.append(el("button",{class:"manna"+(e.id===lastAddedId?" is-new":""),style:"--i:"+Math.min(idx++,12),onclick:()=>openDetail(e)},el("span",{class:"drop"}),el("div",{class:"m-body"},t,d)));
+      const mb=el("button",{class:"manna"+(e.id===lastAddedId?" is-new":""),style:"--i:"+Math.min(idx++,12),onclick:()=>openDetail(e)},el("span",{class:"drop"}),el("div",{class:"m-body"},t,d));
+      box.append(e.example?mb:el("div",{class:"manna-row"},mb,favButton(e)));
     }
     v.append(wrap);
   } else {
@@ -1460,166 +1492,295 @@ function buildPdf(pages,Wpt,Hpt,title){
   push(x+"trailer\n<< /Size "+(total+1)+" /Root 1 0 R /Info 3 0 R >>\nstartxref\n"+xref+"\n%%EOF\n");
   return new Blob(parts,{type:"application/pdf"});
 }
+/* Book design: "Heirloom". A5 at 300 dpi, classic serif, gold accents. Cover: classic cream or green and gold. */
+const BOOK_SERIF='"EB Garamond", Georgia, "Times New Roman", serif';
+const TAGME={provision:"provided",healing:"healed",peace:"gave me peace and strength",work:"opened doors at work",family:"kept my family",marriage:"blessed my relationships",children:"was faithful with my children",studies:"helped me in my studies",travel:"made a way for me to travel",protection:"protected me",home:"gave me a home",faith:"drew me closer to Him"};
+const NUMW=["no","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
+function numWord(n,cap){const w=n<NUMW.length?NUMW[n]:String(n);return cap?w.charAt(0).toUpperCase()+w.slice(1):w;}
+function possessive(n){n=String(n||"").trim();if(!n)return "";return /s$/i.test(n)?n+"’":n+"’s";}
+function joinAnd(a){return a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1];}
+function getBookCover(){try{return localStorage.getItem("everfaithful.bookcover")==="green"?"green":"classic";}catch(e){return "classic";}}
+async function bookFontsReady(sample){
+  const faces=['400 40px "EB Garamond"','italic 400 40px "EB Garamond"','500 40px "EB Garamond"','600 40px "EB Garamond"'];
+  try{await Promise.all(faces.map(f=>document.fonts.load(f,sample||"Aa")));}catch(e){}
+}
 async function makeBook(opt,onProgress){
-  await fontsReady();
-  const paper=opt.paper==="letter"?[612,792]:[595.28,841.89];
-  const PW=1240, PH=Math.round(PW*paper[1]/paper[0]), M=110, FOOT=90;
-  const INK="#22281F", MUTED="#5F6B58", GREEN="#2E6B3C", HONEY="#6E5200", LINE="#E4E6D8", PAPER="#FCFBF7";
-  const DISP='"Bricolage Grotesque", "Avenir Next", sans-serif', BODY='Figtree, "Segoe UI", sans-serif';
   const all=entries();
-  let stones=all.filter(e=>e.type==="stone"), manna=opt.includeManna?all.filter(e=>e.type==="manna"):[];
-  let scopeLabel="";
-  if(opt.scope.startsWith("year:")){const y=opt.scope.slice(5);stones=stones.filter(e=>e.date.startsWith(y));manna=manna.filter(e=>e.date.startsWith(y));scopeLabel=y;}
-  else if(opt.scope.startsWith("tag:")){const t=opt.scope.slice(4);stones=stones.filter(e=>(e.tags||[]).includes(t));manna=[];scopeLabel=TAGNAME[t];}
+  let stones=all.filter(e=>e.type==="stone"), mannaAll=opt.manna==="none"?[]:all.filter(e=>e.type==="manna");
+  let scopeLabel="", isTag=opt.scope.startsWith("tag:");
+  if(opt.scope.startsWith("year:")){const y=opt.scope.slice(5);stones=stones.filter(e=>e.date.startsWith(y));mannaAll=mannaAll.filter(e=>e.date.startsWith(y));scopeLabel=y;}
+  else if(isTag){const t=opt.scope.slice(4);stones=stones.filter(e=>(e.tags||[]).includes(t));mannaAll=[];scopeLabel=TAGNAME[t];}
   const byDate=(a,b)=>a.date.localeCompare(b.date)||(a.created||0)-(b.created||0);
-  stones.sort(byDate); manna.sort(byDate);
-  if(!stones.length&&!manna.length) throw new Error("empty");
+  stones.sort(byDate); mannaAll.sort(byDate);
+  const manna=opt.manna==="fav"?mannaAll.filter(e=>e.fav):mannaAll;
+  if(!stones.length&&!manna.length) throw new Error(opt.manna==="fav"&&mannaAll.length?"nofav":"empty");
+  const chars=[...new Set([...stones,...manna].map(e=>(e.title||"")+(e.text||"")+(e.scripture||"")).join("")+(opt.name||"")+"Book of Remembrance0123456789’“”")].join("");
+  await fontsReady(); await bookFontsReady(chars);
+
+  const green=opt.cover==="green";
+  const PW=1748, PH=2480, MM=PW/148, PT=MM*0.352778;
+  const mm=v=>v*MM, pt=v=>v*PT;
+  const MX=mm(17), TOP=mm(16), BOTTOM=PH-mm(20), W=PW-2*MX;
+  const PAPER="#FBF7EE", INK="#2A2621", SOFT="#6B5F4C", GOLD="#9A7420", GOLDL="#C9A85A", FOOTC="#9B917F";
+  const GBG="#1F3A27", GTITLE="#F0D78A", GSUB="#D9C88F", GSMALL="#C4B27A";
+  const F=(w,size,it)=>(it?"italic ":"")+w+" "+pt(size).toFixed(1)+"px "+BOOK_SERIF;
   const years=[...new Set([...stones,...manna].map(e=>e.date.slice(0,4)))].sort();
-  const pages=[]; let c=null, ctx=null, y=0, pageNo=0;
+  const pages=[]; let c=null, ctx=null, y=0, pageNo=0, pageTexts=[], numbered=true;
+
   async function flush(){
     if(!c) return;
-    ctx.fillStyle=MUTED; ctx.font="500 22px "+BODY; ctx.textBaseline="alphabetic";
-    if(pageNo>1){ctx.textAlign="left";ctx.fillText("Ever Faithful · Book of Remembrance",M,PH-56);ctx.textAlign="right";ctx.fillText(String(pageNo),PW-M,PH-56);ctx.textAlign="left";}
-    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.84));
+    if(numbered&&pageNo>1) text(String(pageNo),F(400,9),FOOTC,PW/2,PH-mm(9),"center");
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.86));
     pages.push({jpeg:new Uint8Array(await blob.arrayBuffer()),w:PW,h:PH,texts:pageTexts}); pageTexts=[];
     c.width=c.height=1; c=null;
     if(onProgress) onProgress(pages.length);
     await new Promise(r=>setTimeout(r,0));
   }
-  async function newPage(){
+  async function newPage(bg,num){
     await flush(); c=document.createElement("canvas"); c.width=PW; c.height=PH; ctx=c.getContext("2d");
-    ctx.fillStyle=PAPER; ctx.fillRect(0,0,PW,PH); ctx.textBaseline="alphabetic"; y=M; pageNo++;
+    ctx.fillStyle=bg||PAPER; ctx.fillRect(0,0,PW,PH); ctx.textBaseline="alphabetic"; y=TOP; pageNo++; numbered=num!==false;
   }
-  async function ensure(h){ if(y+h>PH-M-FOOT+40) await newPage(); }
-  const blob=(x,yy,r,col)=>{const g=ctx.createRadialGradient(x,yy,0,x,yy,r);g.addColorStop(0,col);g.addColorStop(1,col.replace(/[\d.]+\)$/,"0)"));ctx.fillStyle=g;ctx.fillRect(x-r,yy-r,r*2,r*2);};
-  function icon(x,yy,s){ctx.fillStyle="#D9A62E";ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,yy,s,s,s*.23);else ctx.rect(x,yy,s,s);ctx.fill();
-    const e=(cx,cy,rx,ry,col)=>{ctx.beginPath();ctx.ellipse(x+cx*s/100,yy+cy*s/100,rx*s/100,ry*s/100,0,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();};
-    e(50,72,28,12,"#1C3F25");e(50,52,20,10,"#2E6B3C");e(50,35,12,7,"#6FA05F");e(72,22,5.5,5.5,"#FFF6DC");}
-  let pageTexts=[];
-  function text(str,font,col,x,yy,align){ctx.font=font;ctx.fillStyle=col;ctx.textAlign=align||"left";ctx.fillText(str,x,yy);
-    try{const w=ctx.measureText(str).width, sz=Number((font.match(/(\d+)px/)||[0,30])[1]); pageTexts.push({s:String(str),x:align==="center"?x-w/2:align==="right"?x-w:x,y:yy,w,sz});}catch(e){}
-    ctx.textAlign="left";}
-
-  /* cover */
-  await newPage();
-  const yc=opt.scope.startsWith("year:"); const cI=yc?"#FFF4D6":INK, cG=yc?"#FFD24A":GREEN, cM=yc?"rgba(255,244,214,.8)":MUTED;
-  if(yc){const lg=ctx.createLinearGradient(0,0,0,PH);lg.addColorStop(0,"#17114A");lg.addColorStop(1,"#2A1B5C");ctx.fillStyle=lg;ctx.fillRect(0,0,PW,PH);
-    const sr=ctx.createRadialGradient(PW/2,PH+200,0,PW/2,PH+200,PH*.75);sr.addColorStop(0,"#FFB23F");sr.addColorStop(.4,"#FF6A2B");sr.addColorStop(.8,"rgba(42,27,92,0)");ctx.fillStyle=sr;ctx.fillRect(0,0,PW,PH);
-    const rr=rng(Number(scopeLabel)||1);for(let q=0;q<22;q++){ctx.beginPath();ctx.arc(rr()*PW,rr()*PH*.5,2+rr()*4,0,Math.PI*2);ctx.fillStyle="#FFD24A";ctx.fill();}}
-  else{blob(PW*.9,PH*.08,620,"rgba(245,211,90,.55)"); blob(PW*.05,PH*.95,700,"rgba(201,224,138,.5)");}
-  icon(M,M,96); text("Ever Faithful","800 44px "+DISP,cI,M+122,M+62);
-  const nm=(opt.name||"").trim();
-  let cy=PH*.27;
-  text(nm?nm+"'s":"My","700 56px "+BODY,cG,M,cy);
-  ctx.font="800 128px "+DISP; const tl=wrapAll(ctx,"Book of Remembrance",PW-2*M); tl.forEach((l,i)=>text(l,"800 128px "+DISP,cI,M,cy+130+i*130));
-  cy+=130+tl.length*130;
-  const span=years.length>1?years[0]+" to "+years[years.length-1]:years[0];
-  text(scopeLabel&&opt.scope.startsWith("tag:")?scopeLabel+" · "+span:span,"700 46px "+BODY,yc?cG:cM,M,cy+10);
-  const mDays=new Set(manna.map(e=>e.date)).size;
-  text(stones.length+(stones.length===1?" stone of remembrance":" stones of remembrance")+(manna.length?"  ·  "+mDays+(mDays===1?" day":" days")+" of thanks":""),"500 34px "+BODY,cM,M,cy+70);
-  const pileN=Math.min(15,Math.max(1,stones.length)); let base=1; while(base*(base+1)/2<pileN) base++;
-  const sw=Math.min(150,(PW-2*M)/base), sh=sw*.62; let left=pileN, row=0, k=0, cnt=base; const pileBase=PH-M-230;
-  while(left>0){const n=Math.min(cnt,left); const rw=(n-1)*sw*.97; for(let i=0;i<n;i++){const s=stones[k]||{id:"cover"+k};drawRock(ctx,PW/2-rw/2+i*sw*.97,pileBase-row*sh*.74,sw*.48,sh*.48,hashStr(s.id),hashStr(s.id+"t")%4);k++;} left-=n; row++; cnt=Math.max(1,cnt-1);}
-  text("Hitherto hath the LORD helped us.","700 34px "+DISP,yc?"#2A0F00":INK,PW/2,PH-M-80,"center");
-  text("1 Samuel 7:12","700 26px "+BODY,yc?"#2A0F00":GREEN,PW/2,PH-M-36,"center");
-
-  /* sections by year */
-  for(const yr of years){
-    const ys=stones.filter(e=>e.date.startsWith(yr)), ym=manna.filter(e=>e.date.startsWith(yr));
-    await newPage();
-    text(yr,"800 150px "+DISP,GREEN,M,y+120); y+=170;
-    const md=new Set(ym.map(e=>e.date)).size;
-    text([ys.length?ys.length+(ys.length===1?" stone":" stones"):"",md?md+(md===1?" day of thanks":" days of thanks"):""].filter(Boolean).join("  ·  "),"600 34px "+BODY,MUTED,M,y); y+=40;
-    const tc={}; ys.forEach(s=>(s.tags||[]).forEach(t=>{if(TAGVERB[t])tc[t]=(tc[t]||0)+1;}));
-    const top=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,4);
-    if(top.length){y+=24; top.forEach(([t,n])=>{text(TAGVERB[t],"500 30px "+BODY,INK,M,y+30);text(n+(n===1?" time":" times"),"700 30px "+BODY,HONEY,PW-M,y+30,"right");y+=50;});}
-    y+=30; ctx.fillStyle=LINE; ctx.fillRect(M,y,PW-2*M,3); y+=60;
-    for(const s of ys){
-      ctx.font="800 46px "+DISP; const tlines=wrapAll(ctx,s.title||"Testimony",PW-2*M-200);
-      await ensure(Math.max(130,tlines.length*54+50)+80);
-      drawRock(ctx,M+80,y+58,74,50,hashStr(s.id),hashStr(s.id+"t")%4);
-      text(niceDate(s.date).toUpperCase(),"700 22px "+BODY,MUTED,M+200,y+20);
-      tlines.forEach((l,i)=>text(l,"800 46px "+DISP,INK,M+200,y+72+i*54));
-      y+=Math.max(140,72+tlines.length*54+10);
-      const meta=[s.scripture?"✦ "+s.scripture:"",(s.tags||[]).filter(t=>TAGNAME[t]).map(t=>TAGNAME[t]).join(" · ")].filter(Boolean);
-      if(meta.length){await ensure(44);text(meta.join("     "),"700 26px "+BODY,GREEN,M,y+26);y+=50;}
-      ctx.font="400 31px "+BODY; const lines=wrapAll(ctx,s.text,PW-2*M);
-      for(const l of lines){await ensure(48);if(l)text(l,"400 31px "+BODY,INK,M,y+34);y+=l?48:20;}
-      y+=46; await ensure(10); ctx.fillStyle=LINE; ctx.fillRect(M,y,PW-2*M,2); y+=56;
+  function record(str,x,yy,w,font){const sz=Number((font.match(/([\d.]+)px/)||[0,30])[1]);pageTexts.push({s:String(str),x,y:yy,w,sz});}
+  function text(str,font,col,x,yy,align){
+    ctx.font=font; ctx.fillStyle=col; ctx.textAlign="left";
+    const w=ctx.measureText(str).width, x0=align==="center"?x-w/2:align==="right"?x-w:x;
+    ctx.fillText(str,x0,yy); record(str,x0,yy,w,font); return w;
+  }
+  function spaced(str,font,col,x,yy,align,track){
+    ctx.font=font; ctx.fillStyle=col; ctx.textAlign="left";
+    const ch=[...str], tr=track*parseFloat(font.match(/([\d.]+)px/)[1]);
+    const ws=ch.map(k=>ctx.measureText(k).width), total=ws.reduce((a,b)=>a+b,0)+tr*(ch.length-1);
+    let xx=align==="center"?x-total/2:align==="right"?x-total:x; const x0=xx;
+    ch.forEach((k,i)=>{ctx.fillText(k,xx,yy);xx+=ws[i]+tr;});
+    record(str,x0,yy,total,font); return total;
+  }
+  function wrapWords(words,widthFor){
+    const lines=[]; let line=[], i=0;
+    for(const w of words){
+      const t=line.concat(w).join(" ");
+      if(line.length&&ctx.measureText(t).width>widthFor(lines.length)){lines.push(line);line=[w];}else line.push(w);
     }
-    if(ym.length){
-      await ensure(200);
-      text("Manna","800 60px "+DISP,INK,M,y+56); text("Daily thanks","500 28px "+BODY,MUTED,M+214,y+54); y+=96;
-      let curM=null;
-      for(const e of ym){
-        const m=e.date.slice(0,7);
-        if(m!==curM){curM=m;await ensure(110);y+=14;text(monthLabel(e.date),"700 30px "+BODY,GREEN,M,y+30);y+=56;}
-        ctx.font="400 29px "+BODY; const lines=wrapAll(ctx,e.text,PW-2*M-170);
-        await ensure(Math.min(lines.length,2)*44+10);
-        ctx.beginPath();ctx.arc(M+8,y+20,8,0,Math.PI*2);ctx.fillStyle="#E9BC2E";ctx.fill();
-        text(niceDate(e.date).replace(/,?\s*\d{4}$/,""),"600 24px "+BODY,MUTED,M+30,y+29);
-        for(let i=0;i<lines.length;i++){if(i)await ensure(44);text(lines[i],"400 29px "+BODY,INK,M+170,y+30);y+=44;}
-        y+=14;
+    if(line.length) lines.push(line);
+    return lines;
+  }
+  function drawLine(words,font,col,x,yy,width,justify){
+    ctx.font=font; ctx.fillStyle=col; ctx.textAlign="left";
+    const str=words.join(" "), sp=ctx.measureText(" ").width;
+    if(justify&&words.length>1){
+      const ws=words.map(w=>ctx.measureText(w).width), gap=(width-ws.reduce((a,b)=>a+b,0))/(words.length-1);
+      if(gap>sp*.6&&gap<sp*2){let xx=x;words.forEach((w,i)=>{ctx.fillText(w,xx,yy);xx+=ws[i]+gap;});record(str,x,yy,width,font);return;}
+    }
+    ctx.fillText(str,x,yy); record(str,x,yy,ctx.measureText(str).width,font);
+  }
+  function centerWrap(str,font,col,cx,yy,maxW,lh){
+    ctx.font=font; const lines=wrapWords(String(str).split(/\s+/).filter(Boolean),()=>maxW);
+    lines.forEach((l,i)=>text(l.join(" "),font,col,cx,yy+i*lh,"center")); return lines.length;
+  }
+  function cairn(cx,top,w,stroke,fill,lw){
+    const s=w/60; ctx.save(); ctx.lineWidth=lw; ctx.strokeStyle=stroke;
+    [[30,46,22,7],[29,33,15,5.5],[31,22,10,4.2],[30,13,6,3]].forEach(([x,yy,rx,ry])=>{ctx.beginPath();ctx.ellipse(cx+(x-30)*s,top+yy*s,rx*s,ry*s,0,0,Math.PI*2);if(fill){ctx.fillStyle=fill;ctx.fill();}ctx.stroke();});
+    ctx.restore();
+  }
+  function diamonds(cx,yy,n,col){
+    const r=mm(.9), gap=mm(4.2); ctx.fillStyle=col;
+    for(let i=0;i<n;i++){const x=cx+(i-(n-1)/2)*gap;ctx.beginPath();ctx.moveTo(x,yy-r);ctx.lineTo(x+r*.62,yy);ctx.lineTo(x,yy+r);ctx.lineTo(x-r*.62,yy);ctx.closePath();ctx.fill();}
+  }
+  function rule(cx,yy,w,col){ctx.fillStyle=col;ctx.fillRect(cx-w/2,yy,w,Math.max(2,pt(.6)));}
+  function frame(){
+    if(green){ctx.strokeStyle="rgba(233,188,46,.45)";ctx.lineWidth=pt(.8);const i=mm(7);ctx.beginPath();if(ctx.roundRect)ctx.roundRect(i,i,PW-2*i,PH-2*i,mm(2));else ctx.rect(i,i,PW-2*i,PH-2*i);ctx.stroke();}
+    else{ctx.strokeStyle=GOLDL;ctx.lineWidth=pt(.6);ctx.strokeRect(mm(8),mm(8),PW-mm(16),PH-mm(16));ctx.lineWidth=pt(.3);ctx.strokeRect(mm(9.6),mm(9.6),PW-mm(19.2),PH-mm(19.2));}
+  }
+  async function ensure(h){if(y+h>BOTTOM){await newPage();return true;}return false;}
+
+  /* ----- cover ----- */
+  const nm=(opt.name||"").trim(), poss=possessive(nm);
+  const span=years.length>1?years[0]+" to "+years[years.length-1]:years[0];
+  const mDays=new Set(mannaAll.map(e=>e.date)).size;
+  await newPage(green?GBG:PAPER,false); frame();
+  const verseY=PH-mm(30);
+  if(!green){
+    cairn(PW/2,mm(28),mm(14),"#B08A35",null,pt(.9));
+    let cy=mm(28)+mm(14)*56/60+mm(9);
+    if(poss){text(poss,F(400,15,1),SOFT,PW/2,cy,"center");cy+=pt(15)*1.1;}
+    cy+=mm(6);
+    text("Book of",F(500,31),INK,PW/2,cy+pt(31)*.8,"center"); text("Remembrance",F(500,31),INK,PW/2,cy+pt(31)*1.85,"center");
+    cy+=pt(31)*1.85+mm(7); rule(PW/2,cy,mm(28),GOLDL); cy+=mm(9);
+    const meta=[isTag?scopeLabel:"",span,stones.length?numWord(stones.length,1)+(stones.length===1?" stone of remembrance":" stones of remembrance"):"",mDays?numWord(mDays,1)+(mDays===1?" day of thanks":" days of thanks"):""].filter(Boolean);
+    meta.forEach((l,i)=>text(l,F(400,11),SOFT,PW/2,cy+i*pt(11)*1.6,"center"));
+    text("“Hitherto hath the LORD helped us.”",F(400,12.5,1),INK,PW/2,verseY,"center");
+    spaced("1 SAMUEL 7:12",F(500,9.5),GOLD,PW/2,verseY+mm(6.5),"center",.18);
+  } else {
+    const blockH=mm(20)*56/60+mm(10)+pt(38)*2.05+(poss?pt(16)*1.5:0)+mm(10);
+    let cy=PH*.44-blockH/2;
+    cairn(PW/2,cy,mm(20),"#E9BC2E","rgba(233,188,46,.12)",pt(.9)); cy+=mm(20)*56/60+mm(10);
+    text("Book of",F(600,38),GTITLE,PW/2,cy+pt(38)*.8,"center"); text("Remembrance",F(600,38),GTITLE,PW/2,cy+pt(38)*1.8,"center");
+    cy+=pt(38)*1.8;
+    if(poss){cy+=pt(16)*1.4;text(poss+(mDays?" stones and manna":" stones of remembrance"),F(400,16,1),GSUB,PW/2,cy,"center");}
+    cy+=mm(10);
+    const caps=[isTag?scopeLabel.toUpperCase():"",span.toUpperCase(),stones.length?stones.length+(stones.length===1?" STONE":" STONES"):"",mDays?mDays+(mDays===1?" DAY OF THANKS":" DAYS OF THANKS"):""].filter(Boolean).join("  ·  ");
+    spaced(caps,F(500,8.5),GSMALL,PW/2,cy,"center",.2);
+    text("“Hitherto hath the LORD helped us.”",F(400,14,1),"#E6D6A4",PW/2,verseY,"center");
+    spaced("1 SAMUEL 7:12",F(500,8.5),GSMALL,PW/2,verseY+mm(6.5),"center",.2);
+  }
+
+  /* ----- years ----- */
+  const bodyF=F(400,11.3), bodyLH=pt(11.3)*1.5;
+  /* body drawn separately so page breaks can happen between lines */
+  async function drawStoneFull(s){
+    ctx.font=F(600,15); const tl=wrapWords((s.title||"Testimony").split(/\s+/),()=>W);
+    const headH=pt(8.5)*1.4+mm(1.5)+tl.length*pt(15)*1.22+(s.scripture?pt(10.5)*1.4:0)+mm(2.5);
+    const paras=String(s.text||"").split(/\n+/).map(p=>p.trim()).filter(Boolean);
+    await ensure(headH+bodyLH*2);
+    spaced(niceDate(s.date).toUpperCase(),F(500,8.5),GOLD,MX,y+pt(8.5),"left",.18); y+=pt(8.5)*1.4+mm(1.5);
+    tl.forEach(l=>{text(l.join(" "),F(600,15),INK,MX,y+pt(15)*.95);y+=pt(15)*1.22;});
+    if(s.scripture){text(s.scripture,F(400,10.5,1),GOLD,MX,y+pt(10.5)*.95);y+=pt(10.5)*1.4;}
+    y+=mm(2.5);
+    for(let pi=0;pi<paras.length;pi++){
+      ctx.font=bodyF;
+      let words=paras[pi].split(/\s+/), capFont=null, cap="", capW=0;
+      const first=words[0]||"";
+      if(pi===0&&first.length>1&&/^[A-Za-z]/.test(first)&&wrapWords(words,()=>W).length>=2){
+        cap=first.charAt(0); const capSize=(bodyLH+pt(11.3)*.66)/.66; capFont="500 "+capSize.toFixed(1)+"px "+BOOK_SERIF;
+        ctx.font=capFont; capW=ctx.measureText(cap).width+mm(.7); ctx.font=bodyF;
+        words=[first.slice(1)].concat(words.slice(1));
+      }
+      const lines=wrapWords(words,i=>i<2&&cap?W-capW:W);
+      if(pi>0) y+=bodyLH*.35;
+      for(let i=0;i<lines.length;i++){
+        if(!(cap&&i===1)) await ensure(bodyLH);
+        if(cap&&i===0){ctx.font=capFont;ctx.fillStyle=GOLD;ctx.fillText(cap,MX,y+bodyLH*.72+bodyLH);}
+        const x=cap&&i<2?MX+capW:MX, w=cap&&i<2?W-capW:W;
+        drawLine(lines[i],bodyF,INK,x,y+bodyLH*.72,w,i<lines.length-1);
+        y+=bodyLH;
+      }
+      if(cap) record(cap,MX,y,capW,capFont);
+    }
+    y+=mm(6);
+  }
+  async function yearHeader(yr,ys,ymAll){
+    await newPage();
+    spaced("THE YEAR",F(500,9.5),GOLD,PW/2,y+pt(9.5),"center",.18); y+=pt(9.5)+mm(2);
+    text(yr,F(500,36),INK,PW/2,y+pt(36)*.78,"center");
+    y+=pt(36)*.85+mm(2.5);
+    const md=new Set(ymAll.map(e=>e.date)).size;
+    const cnt=[ys.length?numWord(ys.length,1)+(ys.length===1?" stone":" stones"):"",md?(ys.length?numWord(md):numWord(md,1))+(md===1?" day of thanks":" days of thanks"):""].filter(Boolean).join(" · ");
+    if(cnt){text(cnt,F(400,11,1),SOFT,PW/2,y+pt(11)*.8,"center");y+=pt(11)*1.3;}
+    if(!isTag&&ys.length){
+      const tc={}; ys.forEach(s=>(s.tags||[]).forEach(t=>{if(TAGME[t])tc[t]=(tc[t]||0)+1;}));
+      const top=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([t])=>TAGME[t]);
+      if(top.length){y+=mm(3);const n=centerWrap("He "+joinAnd(top)+".",F(400,11.5),"#4A4339",PW/2,y+pt(11.5)*.8,mm(95),pt(11.5)*1.5);y+=n*pt(11.5)*1.5;}
+    }
+    y+=mm(4); diamonds(PW/2,y,3,GOLDL); y+=mm(8);
+  }
+  async function mannaSection(yr,ym,ymAll){
+    if(y>TOP&&y+mm(60)>BOTTOM) await newPage(); else if(y>TOP) y+=mm(4);
+    text("Manna",F(500,24),INK,PW/2,y+pt(24)*.8,"center"); y+=pt(24)*1.05;
+    text((opt.manna==="fav"?"Favourite days of thanks, ":"Daily thanks, ")+yr,F(400,11,1),SOFT,PW/2,y+pt(11)*.8,"center"); y+=pt(11)*1.3+mm(3);
+    diamonds(PW/2,y,1,GOLDL); y+=mm(6);
+    const months=[]; ym.forEach(e=>{const m=e.date.slice(0,7);let g=months[months.length-1];if(!g||g.m!==m){g={m,items:[]};months.push(g);}g.items.push(e);});
+    const monthDays=m=>new Set(ymAll.filter(e=>e.date.startsWith(m)).map(e=>e.date)).size;
+    const two=ym.length>14;
+    const size=two?9.5:11, lh=pt(size)*1.4, dateW=two?0:mm(15), gutter=mm(7), colW=two?(W-gutter)/2:W;
+    let col=0, colTop=y;
+    const colX=()=>MX+(two?col*(colW+gutter):0);
+    async function room(h){
+      if(y+h<=BOTTOM) return;
+      if(two&&col===0){col=1;y=colTop;return;}
+      await newPage(); col=0; colTop=y;
+    }
+    for(const g of months){
+      const shown=g.items.length, days=monthDays(g.m);
+      const label=monthLabel(g.m+"-01").toUpperCase(), sub=opt.manna==="fav"?shown+" of "+days+(days===1?" day of thanks":" days of thanks"):days+(days===1?" day of thanks":" days of thanks");
+      await room(pt(9.5)*1.5+pt(8.5)*1.5+lh*1.2);
+      if(y>colTop) y+=mm(3);
+      if(two){spaced(label,F(500,9),GOLD,colX(),y+pt(9),"left",.16);y+=pt(9)*1.45;text(sub,F(400,8.6,1),SOFT,colX(),y+pt(8.6)*.8);y+=pt(8.6)*1.5;}
+      else{spaced(label,F(500,9.5),GOLD,PW/2,y+pt(9.5),"center",.18);y+=pt(9.5)*1.45;text(sub,F(400,9.5,1),SOFT,PW/2,y+pt(9.5)*.8,"center");y+=pt(9.5)*1.6;}
+      for(const e of g.items){
+        const dl=niceDate(e.date).replace(/,?\s*\d{4}$/,"");
+        ctx.font=F(400,size,1); const dw=two?ctx.measureText(dl).width+mm(2):0;
+        ctx.font=F(400,size); const lines=wrapWords(String(e.text).split(/\s+/).filter(Boolean),i=>two?(i===0?colW-dw:colW):colW-dateW);
+        await room(Math.min(lines.length,2)*lh);
+        text(dl,F(400,size,1),GOLD,colX(),y+lh*.72);
+        for(let i=0;i<lines.length;i++){if(i) await room(lh); text(lines[i].join(" "),F(400,size),INK,colX()+(two?(i===0?dw:0):dateW),y+lh*.72); y+=lh;}
+        y+=lh*.18;
       }
     }
   }
-  /* closing */
-  await newPage();
-  blob(PW*.5,PH*.42,560,"rgba(245,211,90,.35)");
-  ctx.font="800 70px "+DISP; const v=wrapAll(ctx,"“The LORD hath done great things for us; whereof we are glad.”",PW-2*M-60);
-  const vy=PH*.4-(v.length*84)/2; v.forEach((l,i)=>text(l,"800 70px "+DISP,INK,PW/2,vy+i*84,"center"));
-  text("Psalm 126:3","700 34px "+BODY,GREEN,PW/2,vy+v.length*84+30,"center");
-  icon(PW/2-40,PH-M-200,80);
-  text("Made with Ever Faithful","600 28px "+BODY,MUTED,PW/2,PH-M-70,"center");
-  text("everfaithful.app","800 30px "+BODY,GREEN,PW/2,PH-M-28,"center");
+  for(const yr of years){
+    const ys=stones.filter(e=>e.date.startsWith(yr)), ymAll=mannaAll.filter(e=>e.date.startsWith(yr)), ym=manna.filter(e=>e.date.startsWith(yr));
+    await yearHeader(yr,ys,ymAll);
+    for(const s of ys) await drawStoneFull(s);
+    if(ym.length) await mannaSection(yr,ym,ymAll);
+  }
+
+  /* ----- closing ----- */
+  await newPage(green?GBG:PAPER,false); frame();
+  const qF=green?F(400,21,1):F(400,19,1), qLH=(green?pt(21):pt(19))*1.35;
+  ctx.font=qF; const ql=wrapWords("“The LORD hath done great things for us; whereof we are glad.”".split(" "),()=>mm(102));
+  let qy=PH*.43-(ql.length*qLH)/2;
+  ql.forEach((l,i)=>text(l.join(" "),qF,green?GTITLE:INK,PW/2,qy+i*qLH+qLH*.7,"center"));
+  qy+=ql.length*qLH+mm(5);
+  if(!green){rule(PW/2,qy,mm(25),GOLDL);qy+=mm(7);}
+  spaced("PSALM 126:3",F(500,green?8.5:9.5),green?GSMALL:GOLD,PW/2,qy+mm(2),"center",.2);
+  if(!green) cairn(PW/2,PH-mm(36),mm(7),"#B08A35",null,pt(.8));
+  text("Made with Ever Faithful",F(400,9.5),green?"#B7AA7C":FOOTC,PW/2,PH-mm(22),"center");
+  text("everfaithful.app",F(400,9.5),green?"#B7AA7C":FOOTC,PW/2,PH-mm(17.5),"center");
   await flush();
-  const title=(nm?nm+"'s ":"My ")+"Book of Remembrance"+(scopeLabel?" ("+scopeLabel+")":"");
-  return {blob:buildPdf(pages,paper[0],paper[1],title),pages:pages.length};
+  const title=(poss?poss+" ":"My ")+"Book of Remembrance"+(scopeLabel?" ("+scopeLabel+")":"");
+  return {blob:buildPdf(pages,419.53,595.28,title),pages:pages.length};
 }
 function openBook(preset){
   preset=preset||{};
   const list=entries(); const years=[...new Set(list.map(e=>e.date.slice(0,4)))].sort().reverse();
   const usedTags=TAGS.filter(([k])=>list.some(e=>e.type==="stone"&&(e.tags||[]).includes(k)));
-  let scope=preset.scope||"all", paper=defaultPaper(), includeManna=true;
+  let scope=preset.scope||"all", cover=getBookCover(), mannaMode="all";
   let savedName=""; try{savedName=localStorage.getItem("everfaithful.bookname")||"";}catch(e){}
-  const nameIn=el("input",{class:"inp",id:"bookName",placeholder:"e.g. Lola",value:savedName,autocomplete:"given-name"});
+  const nameIn=el("input",{class:"inp",id:"bookName",placeholder:"e.g. Lola",value:savedName,autocomplete:"given-name",maxlength:"40"});
   const mkChips=(opts,cur,onPick)=>{const w=el("div",{class:"tags"});opts.forEach(([v,l])=>{const b=el("button",{type:"button",class:"tagbtn","aria-pressed":String(cur()===v),text:l});b.onclick=()=>{onPick(v);[...w.children].forEach(x=>x.setAttribute("aria-pressed",String(x===b)));sync();};w.append(b);});return w;};
   const scopeChips=mkChips([["all","Everything"],...years.map(y=>["year:"+y,y])],()=>scope.startsWith("tag:")?"":scope,v=>{scope=v;});
   const tagChips=usedTags.length?mkChips(usedTags.map(([k,l])=>["tag:"+k,l]),()=>scope,v=>{scope=v;}):null;
-  const mannaRow=el("label",{class:"toggle"},el("span",{text:"Include manna (daily thanks)"}),(()=>{const c=el("input",{type:"checkbox",id:"bookManna"});c.checked=true;c.onchange=()=>{includeManna=c.checked;};return c;})());
-  const paperChips=mkChips([["a4","A4"],["letter","US Letter"]],()=>paper,v=>{paper=v;});
+  const mannaChips=mkChips([["all","All manna"],["fav","Favourites only"],["none","No manna"]],()=>mannaMode,v=>{mannaMode=v;});
+  const mannaHint=el("p",{class:"muted",style:"margin:0;font-size:13px;font-weight:400"});
+  const mannaRow=el("div",{class:"f",style:"display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"},"Manna (daily thanks)",mannaChips,mannaHint);
+  const mini=(k,label)=>el("button",{type:"button",class:"cover-opt","aria-pressed":String(cover===k),onclick:()=>{cover=k;try{localStorage.setItem("everfaithful.bookcover",k);}catch(e){}[...coverRow.children].forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.k===cover)));},"data-k":k},
+    el("span",{class:"mini mini-"+k},el("span",{class:"mini-t",html:"Book of<br>Remembrance"})),el("span",{text:label}));
+  const coverRow=el("div",{class:"cover-pick"},mini("classic","Classic"),mini("green","Green and gold"));
   const status=el("p",{class:"muted",style:"margin:0;font-size:14px",text:""});
   function sync(){
     [...scopeChips.children].forEach((b,i)=>b.setAttribute("aria-pressed",String((i===0?"all":"year:"+years[i-1])===scope)));
     if(tagChips)[...tagChips.children].forEach((b,i)=>b.setAttribute("aria-pressed",String("tag:"+usedTags[i][0]===scope)));
     mannaRow.hidden=scope.startsWith("tag:");
+    const inScope=entries().filter(e=>e.type==="manna"&&(!scope.startsWith("year:")||e.date.startsWith(scope.slice(5))));
+    const favs=inScope.filter(e=>e.fav).length;
+    mannaHint.textContent=mannaMode==="fav"?(favs?favs+(favs===1?" favourite":" favourites")+" will go in. Each month still shows how many days of thanks you had.":"You haven't starred any manna yet. Tap the star beside a manna in your list to make it a favourite."):mannaMode==="all"?(inScope.length>60?"Lots of manna! It's set in two neat columns. Choose Favourites only for a shorter book.":""):"Only your stones go in.";
+    mannaHint.hidden=!mannaHint.textContent;
   }
   let busy=false;
   const go=el("button",{class:"btn primary block",text:"Make my book",onclick:async()=>{
     if(busy)return; busy=true; go.disabled=true;
-    const name=nameIn.value.trim(); try{localStorage.setItem("everfaithful.bookname",name);localStorage.setItem("everfaithful.paper",paper);}catch(e){}
+    const name=nameIn.value.trim(); try{localStorage.setItem("everfaithful.bookname",name);}catch(e){}
     try{
-      const res=await makeBook({scope,paper,includeManna:includeManna&&!scope.startsWith("tag:"),name},n=>{go.textContent="Making page "+n+"…";});
+      const res=await makeBook({scope,cover,manna:scope.startsWith("tag:")?"none":mannaMode,name},n=>{go.textContent="Making page "+n+"…";});
       go.textContent="Saving…";
       const fname="EverFaithful-Book-"+(scope==="all"?"All":scope.startsWith("year:")?scope.slice(5):TAGNAME[scope.slice(4)].replace(/[^a-z0-9]+/gi,"-"))+".pdf";
       const r=await saveFile(res.blob,fname);
       status.textContent=r==="cancelled"?"Cancelled.":"Your book is ready: "+res.pages+" pages.";
       if(r!=="cancelled") toast("Book saved. You can print it or keep it forever.");
     }catch(err){
-      status.textContent=err&&err.message==="empty"?"There's nothing in that selection yet. Try Everything.":(err&&err.code==="declined"?"Save cancelled.":"Couldn't make the book here. Try again.");
+      status.textContent=err&&err.message==="nofav"?"None of the manna here is starred yet. Choose All manna, or star some favourites first.":err&&err.message==="empty"?"There's nothing in that selection yet. Try Everything.":(err&&err.code==="declined"?"Save cancelled.":"Couldn't make the book here. Try again.");
     }
     busy=false; go.disabled=false; go.textContent="Make my book";
   }});
   let close;
   const sheet=el("div",{class:"sheet",role:"dialog","aria-modal":"true","aria-label":"Make a book"},
     el("div",{class:"sheet-head"},el("h2",{text:"Book of Remembrance"}),closeBtn(()=>close())),
-    el("p",{class:"muted",style:"margin:-6px 0 0",text:"Turn your testimonies into a beautiful PDF you can read, print, or pass down. It opens anywhere, even without Ever Faithful."}),
+    el("p",{class:"muted",style:"margin:-6px 0 0",text:"Turn your testimonies into a beautiful book you can read, print or pass down. It opens anywhere, even without Ever Faithful."}),
     el("label",{class:"f"},el("span",null,"Name for the cover ",el("small",{text:"(optional, stays on this phone)"})),nameIn),
+    el("div",{class:"f",style:"display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"},"Cover",coverRow),
     el("div",{class:"f",style:"display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"},"What should it cover?",scopeChips),
     tagChips?el("div",{class:"f",style:"display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"},el("span",null,"Or one topic ",el("small",{style:"font-weight:400;color:var(--muted)",text:"(e.g. every time He provided)"})),tagChips):null,
     mannaRow,
-    el("div",{class:"f",style:"display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"},"Paper size",paperChips),
-    el("div",{class:"note",text:"This book is for reading and printing. It can't restore your entries on a new phone. For that, use Backup and restore in the menu."}),
+    el("div",{class:"note",text:"Book size A5. To print at home on A4 paper, choose Fit to page. This book can't restore your entries on a new phone. For that, use Backup and restore in the menu."}),
     el("div",{class:"privacy-line",html:ICON_LOCK+"<span>Made on this phone. Anyone you give the PDF to can read it.</span>"}),
     go, status);
   close=stackSheet(sheet); sync();
@@ -1807,12 +1968,14 @@ function freqPicker(r,onChange){
 const SITE_HOST="everfaithful.app";
 const COUNTER_URL="https://everfaithful.goatcounter.com/count";
 const isStandalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){return false;}};
+/* installed: opened as the app, or Chrome told us it was installed from this browser */
+const isInstalled=()=>{if(isStandalone())return true;try{return localStorage.getItem("everfaithful.installed")==="1";}catch(e){return false;}};
 const UA=navigator.userAgent||"";
 const isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 const isAndroid=/android/i.test(UA);
 const isTouch=(()=>{try{return matchMedia("(pointer: coarse)").matches;}catch(e){return false;}})();
 let deferredInstall=null;
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;try{renderBanners(entries());renderCheckin();}catch(_){}});
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;/* Chrome only offers this when the app is not installed, so a removed app gets the prompts back */try{localStorage.removeItem("everfaithful.installed");}catch(_){}try{renderBanners(entries());renderCheckin();}catch(_){}});
 window.addEventListener("appinstalled",()=>{deferredInstall=null;try{localStorage.setItem("everfaithful.installed","1");}catch(e){}try{renderBanners(entries());}catch(_){}toast("Ever Faithful is on your home screen now.");});
 
 function countVisit(){
@@ -1852,7 +2015,7 @@ async function saveFile(blob,name,title){
 /* install */
 function installDismissed(){try{const t=Number(localStorage.getItem("everfaithful.installLater")||0);return Date.now()-t<7*864e5;}catch(e){return false;}}
 function installCard(){
-  if(isStandalone()||installDismissed()) return null;
+  if(isInstalled()||installDismissed()) return null;
   if(!(deferredInstall||isIOS||isAndroid)) return null;
   return el("div",{class:"install-card"},
     el("div",{class:"ic-art",html:APP_ICON}),
@@ -1995,7 +2158,7 @@ function restoreFrom(file){
       const d=JSON.parse(r.result);
       if(!d||d.app!=="Ever Faithful"||!Array.isArray(d.entries))throw 0;
       const have=new Set(state.entries.map(e=>e.id)); let added=0;
-      for(const e of d.entries){ if(e&&e.id&&e.text&&e.date&&(e.type==="manna"||e.type==="stone")&&!have.has(e.id)){state.entries.push({id:String(e.id),type:e.type,text:String(e.text),date:String(e.date).slice(0,10),title:String(e.title||""),scripture:String(e.scripture||""),tags:Array.isArray(e.tags)?e.tags.filter(t=>TAGNAME[t]):[],created:Number(e.created)||0});added++;} }
+      for(const e of d.entries){ if(e&&e.id&&e.text&&e.date&&(e.type==="manna"||e.type==="stone")&&!have.has(e.id)){state.entries.push({id:String(e.id),type:e.type,text:String(e.text),date:String(e.date).slice(0,10),title:String(e.title||""),scripture:String(e.scripture||""),tags:Array.isArray(e.tags)?e.tags.filter(t=>TAGNAME[t]):[],created:Number(e.created)||0,fav:e.type==="manna"&&e.fav===true});added++;} }
       if(added){state.started=true; if(!state.lastBackup) state.lastBackup=Date.now();}
       persist(); closeLayer(); cairnBuilt=false; render();
       toast(added?"Your entries are back ("+added+"). Set your PIN and reminders again from the menu.":"Everything in that backup is already here",added?6000:2800);
@@ -2052,7 +2215,7 @@ function openMenu(){
       el("p",{class:"menu-group",text:"Settings"}),
       el("button",{class:"list-btn",onclick:()=>{closeLayer();openReminderSettings();},html:ico('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>')+'<div><b>Reminders: '+FREQ_LABEL[ensureReminder().freq]+'</b><span>'+reminderSummary()+'. Tap to change how often we check in.</span></div>'}),
       appearanceRow(),
-      isStandalone()?null:el("button",{class:"list-btn",onclick:()=>{closeLayer();doInstall();},html:ico('<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 7v7"/><path d="m9 11 3 3 3-3"/>')+'<div><b>Install the app</b><span>Keeps your entries safer, opens in one tap and works without internet.</span></div>'}),
+      isInstalled()?null:el("button",{class:"list-btn",onclick:()=>{closeLayer();doInstall();},html:ico('<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 7v7"/><path d="m9 11 3 3 3-3"/>')+'<div><b>Install the app</b><span>Keeps your entries safer, opens in one tap and works without internet.</span></div>'}),
       el("p",{class:"menu-group",text:"Privacy"}),
       el("button",{class:"list-btn",onclick:()=>{closeLayer();openWelcome(true);},html:ico('<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>')+'<div><b>Our privacy promise</b><span>Read again how your entries are kept.</span></div>'}),
       el("a",{class:"list-btn",href:"./privacy.html",style:"color:inherit;text-decoration:none",html:ico('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>')+'<div><b>Privacy page</b><span>Exactly what is stored, where, and who to contact.</span></div>'}))));
@@ -2161,8 +2324,8 @@ function openWelcome(again){
     el("div",{class:"promise"},
       el("div",{html:ok+"<span><b>Only you can see what you write.</b> Everything is saved on this phone. We never see it. We only count how many people open Ever Faithful, never who they are or what they write. <a href=\"./privacy.html\">Read the privacy page</a></span>"}),
       el("div",{html:ok+"<span><b>No account, no password.</b> Speak or type, then save. If others use your phone, you can add a PIN lock from the menu.</span>"}),
-      el("div",{html:warn+"<span><b>Keep a backup.</b> Your entries live only on this phone, so changing phones, deleting the app or clearing your browser's data would erase them. Open the menu <b>&#9776;</b> and tap <b>Backup and restore</b> now and then. It takes about 30 seconds and saves one small file. You don't need to remember: we'll remind you about once a month, only when you've added something new. <b class='alert-text'>Always back up before changing phones.</b> Keep the file somewhere safe, like WhatsApp &ldquo;Message yourself&rdquo;, your email or Google Drive. On a new phone, open Ever Faithful, open the menu, tap <b>Backup and restore</b>, choose <b>Restore</b> and pick that file. All your entries come back.</span>"}),
-      el("div",{html:ok+"<span><b>Tip:</b> install Ever Faithful on your phone. It keeps your entries safer, opens in one tap and works without internet. We'll show you how.</span>"})),
+      el("div",{html:warn+"<span><b>Keep a backup.</b> Your entries live only on this phone, so changing phones, deleting the app or clearing your browser's data would erase them. Open the menu <b>&#9776;</b> and tap <b>Backup and restore</b> now and then. It takes about 30 seconds and saves one small file. You don't need to remember: we'll remind you about once a month, only when you've added something new. <b class='keep-text'>Always back up before changing phones.</b> Keep the file somewhere safe, like WhatsApp &ldquo;Message yourself&rdquo;, your email or Google Drive. On a new phone, open Ever Faithful, open the menu, tap <b>Backup and restore</b>, choose <b>Restore</b> and pick that file. All your entries come back.</span>"}),
+      isInstalled()?null:el("div",{html:ok+"<span><b>Tip:</b> install Ever Faithful on your phone. It keeps your entries safer, opens in one tap and works without internet. We'll show you how.</span>"})),
     el("button",{class:"btn primary block",text:again?"Got it":"Begin",onclick:()=>{try{localStorage.setItem(SEEN,"1");}catch(e){}closeLayer();if(!again&&!realEntries().length)openSetupIntro();}}),
     again?null:el("button",{class:"linkbtn",style:"align-self:center",text:"Moving from another phone? Restore your backup",onclick:()=>{try{localStorage.setItem(SEEN,"1");}catch(e){}closeLayer();render();openBackup();}}))));
 }

@@ -1,5 +1,5 @@
 /* Ever Faithful offline support. Bump VERSION whenever the app files change. */
-const VERSION="ef-2026-11-10-4";
+const VERSION="ef-2026-11-10-5";
 const CORE=[
   "./","./index.html","./privacy.html","./manifest.webmanifest",
   "./icons/icon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./icons/apple-touch-icon.png","./icons/favicon-32.png",
@@ -16,6 +16,14 @@ const CORE=[
   "./fonts/source-serif-4-latin-500-normal.woff2",
   "./fonts/source-serif-4-latin-ext-500-normal.woff2",
   "./fonts/source-serif-4-vietnamese-500-normal.woff2",
+  "./fonts/eb-garamond-latin-400-normal.woff2",
+  "./fonts/eb-garamond-latin-ext-400-normal.woff2",
+  "./fonts/eb-garamond-latin-400-italic.woff2",
+  "./fonts/eb-garamond-latin-ext-400-italic.woff2",
+  "./fonts/eb-garamond-latin-500-normal.woff2",
+  "./fonts/eb-garamond-latin-ext-500-normal.woff2",
+  "./fonts/eb-garamond-latin-600-normal.woff2",
+  "./fonts/eb-garamond-latin-ext-600-normal.woff2",
   "./fonts/figtree-latin-500-normal.woff2",
   "./fonts/figtree-latin-600-normal.woff2",
   "./fonts/figtree-latin-700-normal.woff2",
