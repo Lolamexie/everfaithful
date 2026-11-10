@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Privacy · Ever Faithful</title>
+<meta name="description" content="How Ever Faithful keeps your entries private: everything is saved only on your phone.">
+<meta name="theme-color" content="#F7F5EF">
+<script>try{var t=localStorage.getItem("everfaithful.theme")||"light",d=document.documentElement;if(t==="light"||t==="dark")d.setAttribute("data-theme",t);else d.removeAttribute("data-theme");}catch(e){}</script>
+<link rel="icon" href="./icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<style>
+@font-face{font-family:"Bricolage Grotesque";font-weight:800;font-display:swap;src:url(./fonts/bricolage-grotesque-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:Figtree;font-weight:400;font-display:swap;src:url(./fonts/figtree-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Figtree;font-weight:700;font-display:swap;src:url(./fonts/figtree-latin-700-normal.woff2) format("woff2")}
+:root{--bg:#F7F5EF;--surface:#FFFFFF;--line:#E4E6D8;--fg:#22281F;--muted:#5F6B58;--accent:#2E6B3C;--soft:#E3EFD9;color-scheme:light}
+:root[data-theme="dark"]{--bg:#151715;--surface:#212421;--line:#343933;--fg:#F3F5EF;--muted:#ADB2A9;--accent:#BBDB7E;--soft:#2A302D;color-scheme:dark}
+@media (prefers-color-scheme: dark){:root:not([data-theme]){--bg:#151715;--surface:#212421;--line:#343933;--fg:#F3F5EF;--muted:#ADB2A9;--accent:#BBDB7E;--soft:#2A302D;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Figtree,"Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.6}
+main{max-width:680px;margin:0 auto;padding:max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px))}
+.back{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:var(--accent);font-weight:700;text-decoration:none}
+.brand{display:flex;align-items:center;gap:12px;margin:18px 0 6px}
+.brand img{width:44px;height:44px}
+h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(30px,8vw,40px);line-height:1.08;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:21px;line-height:1.2;margin:30px 0 8px}
+p,li{margin:0 0 10px}
+ul{padding-left:22px;margin:0 0 10px}
+.updated{color:var(--muted);font-size:15px;margin:6px 0 20px}
+.short{background:var(--soft);border-radius:18px;padding:16px 18px;margin:8px 0 4px}
+.short p:last-child{margin:0}
+.contact{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="./">&#8592; Back to Ever Faithful</a>
+  <div class="brand"><img src="./icons/icon-192.png" alt=""><h1>Your privacy</h1></div>
+  <p class="updated">Last updated 10 November 2026</p>
+
+  <div class="short">
+    <p><b>The short version:</b> everything you write in Ever Faithful is saved only on your phone. We can't see it. There's no account, and we never collect your name, email address or phone number.</p>
+  </div>
+
+  <h2>What is saved, and where</h2>
+  <p>Your manna and stones (the words, titles, dates, scriptures and tags) and your settings (reminder choice, appearance, and the name you add to a book cover) are saved in your browser's storage on this phone. They are not sent to us or to anyone else.</p>
+  <p>If you turn on the PIN lock, your PIN is stored on your phone in scrambled form, not as the numbers you chose.</p>
+
+  <h2>What we can see</h2>
+  <p>Only a count of how many times Ever Faithful is opened each day, and whether it was opened from the home screen or a browser. We use <a href="https://www.goatcounter.com/" rel="noopener">GoatCounter</a>, a privacy-friendly counting service that uses no cookies and doesn't follow you across other websites. It never receives anything you write. Like any website, it receives basic technical details when the count is sent, such as your browser type, and we only ever see totals.</p>
+
+  <h2>Voice typing</h2>
+  <p>When you tap the microphone, your phone's or browser's built-in speech service turns your words into text. On many phones (for example, Android phones using Chrome) this service is provided by Google, and your voice may be processed on their servers under their privacy policy. On iPhone, Apple provides it. Ever Faithful never stores recordings of your voice. If you prefer, you can type instead.</p>
+
+  <h2>Hosting</h2>
+  <p>Ever Faithful is hosted on GitHub Pages, a service of GitHub, Inc. Like any web host, GitHub's servers process technical information such as your internet address when your phone loads the app, so they can deliver it and keep it secure. The app's fonts are stored with the app, so no font service sees your visit. After your first visit, Ever Faithful also works without internet.</p>
+
+  <h2>Reminders</h2>
+  <p>If you set up a reminder, it is added to your own phone's calendar. We receive nothing. If you choose Google Calendar, the reminder is saved in your Google account like any other event.</p>
+
+  <h2>Backups, books and share images</h2>
+  <p>These files are made on your phone and only go where you send them. Anyone you send them to can read them. Your backup file holds all your entries, so only send it to yourself.</p>
+
+  <h2>What the PIN does and doesn't do</h2>
+  <p>The PIN lock hides Ever Faithful from people who pick up your phone. Your entries are not encrypted, so someone with technical skills and access to your unlocked phone could still read them. If you forget your PIN, it can't be recovered by anyone, including us. You can reset the app and restore your entries from your backup.</p>
+
+  <h2>Keeping or deleting your entries</h2>
+  <ul>
+    <li>Delete any entry from inside the app.</li>
+    <li>Deleting the app, clearing your browser's site data or losing your phone erases your entries. Back up first if you want to keep them.</li>
+    <li>Because we hold none of your entries, there's nothing for us to delete or hand over.</li>
+  </ul>
+
+  <h2>Your rights</h2>
+  <p>Data protection laws, including Nigeria's Data Protection Act 2023 and the laws of Canada and the United States, give you rights over your personal information. Ever Faithful doesn't collect or store your personal information, so we have nothing to access, correct or delete on your behalf. If you have a question, please contact us.</p>
+
+  <h2>Changes to this page</h2>
+  <p>If anything here ever changes, we'll update this page and tell you inside the app before the change takes effect.</p>
+
+  <h2>Contact</h2>
+  <div class="contact">
+    <p><b>Ever Faithful</b><br>Person responsible: Lola Mexie<br>Email: <a href="mailto:hello@everfaithful.app">hello@everfaithful.app</a></p>
+  </div>
+
+  <p style="margin-top:28px"><a class="back" href="./">&#8592; Back to Ever Faithful</a></p>
+</main>
+</body>
+</html>
