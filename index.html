@@ -389,6 +389,10 @@ textarea.inp{min-height:130px;resize:vertical;line-height:1.5}
 .md{transform-box:fill-box;transform-origin:center;animation:dotTw 2.8s ease-in-out infinite;animation-delay:calc(var(--k) * -.41s)}
 .pile-empty{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:10px 6px 14px;color:var(--muted);font-size:14px}
 .pile-empty svg{width:150px;height:auto}
+.pile-svg.dream{pointer-events:none}
+.dream-note{font-style:italic}
+#pile{transition:opacity .6s ease}
+#pile.dream-out{opacity:0}
 .pile-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;color:var(--muted);padding:2px 2px 6px;flex-wrap:wrap}
 
 /* search */
@@ -410,6 +414,8 @@ textarea.inp{min-height:130px;resize:vertical;line-height:1.5}
 
 /* facing */
 .facing{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.facing-hint{margin:18px 2px 10px;font-weight:600;font-size:15px;color:var(--fg)}
+.facing.preview .face{border-style:dashed;background:transparent;color:var(--muted);font-weight:600}
 .face{border:1px solid var(--line);background:var(--bg);border-radius:16px;padding:14px;text-align:left;font-weight:700;font-size:15px;line-height:1.25;min-height:58px}
 .face.all{grid-column:1/-1;background:var(--tile-rem);border-color:var(--tile-rem);color:var(--tile-rem-ink)}
 .ex-note .linkbtn{white-space:nowrap;flex:none}
@@ -703,6 +709,8 @@ const pad=n=>String(n).padStart(2,"0");
 let today=new Date();
 const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return iso(d);};
+/* one example manna per month: this month (never in the future), last month, two months ago */
+const exMonth=(k,day)=>{const t=new Date();return iso(new Date(t.getFullYear(),t.getMonth()-k,k===0?Math.min(day,t.getDate()):day));};
 const yearsAgo=n=>{const d=new Date();d.setFullYear(d.getFullYear()-n);return iso(d);};
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 let DF=null,MF=null,TF=null; try{DF=new Intl.DateTimeFormat(undefined,{day:"numeric",month:"short",year:"numeric"});MF=new Intl.DateTimeFormat(undefined,{month:"long",year:"numeric"});TF=new Intl.DateTimeFormat(undefined,{hour:"numeric",minute:"2-digit"});}catch(e){}
@@ -721,14 +729,9 @@ const EXAMPLES=[
   {id:"x3",type:"stone",title:"Rent paid in full, on time",date:thisYear+"-01-09",scripture:"Philippians 4:19",tags:["provision","home"],text:"I didn't know where the money would come from. A contract payment I had written off came through the week before rent was due. Exactly enough.",example:true},
   {id:"x10",type:"stone",title:"Passed my professional exam",date:thisYear+"-04-17",scripture:"Daniel 1:17",tags:["studies","work"],text:"Two failed attempts before this one. I studied after work every night with the generator off half the time. This time the result said PASS.",example:true},
   {id:"x11",type:"stone",title:"Visa approved first time",date:thisYear+"-06-14",scripture:"Isaiah 45:2",tags:["travel"],text:"Everyone said to expect a refusal the first time. The approval came in eleven days.",example:true},
-  {id:"x4",type:"manna",text:"Light was steady all evening. Finished my assignment without stress.",date:daysAgo(1),example:true},
-  {id:"x5",type:"manna",text:"Traffic on Third Mainland Bridge cleared just as I got on.",date:daysAgo(2),example:true},
-  {id:"x6",type:"manna",text:"Called Tolu and we laughed for an hour. I needed that.",date:daysAgo(4),example:true},
-  {id:"x7",type:"manna",text:"Made it home safely through the snowstorm.",date:daysAgo(8),example:true},
-  {id:"x12",type:"manna",text:"My boss said thank you for the report in front of everyone.",date:daysAgo(17),example:true},
-  {id:"x13",type:"manna",text:"Mum's blood pressure reading was normal today.",date:daysAgo(26),example:true},
-  {id:"x14",type:"manna",text:"Found my lost ID card in the car.",date:daysAgo(41),example:true},
-  {id:"x15",type:"manna",text:"Sunday service was exactly what I needed.",date:daysAgo(63),example:true}
+  {id:"x4",type:"manna",text:"Light was steady all evening. Finished my assignment without stress.",date:exMonth(0,9),example:true},
+  {id:"x12",type:"manna",text:"My boss said thank you for the report in front of everyone.",date:exMonth(1,24),example:true},
+  {id:"x15",type:"manna",text:"Sunday service was exactly what I needed.",date:exMonth(2,8),example:true}
 ].filter(e=>e.date<=iso(today));
 const realEntries=()=>state.entries;
 const usingExamples=()=>state.entries.length===0&&!state.started;
@@ -804,7 +807,7 @@ function stonePath(x,y,W,H,rad){
 }
 
 /* ---------- main render ---------- */
-let view="home", tab="manna", lastTab=null, lastAddedId=null, query="", yearFilter="all", cairnBuilt=false;
+let view="home", tab="manna", lastTab=null, lastAddedId=null, query="", yearFilter="all", cairnBuilt=false, dreamShown=false, dreamTimer=null;
 function setView(v,noRender){
   view=v;
   if((v==="manna"||v==="stone")&&tab!==v){tab=v;query="";yearFilter="all";const q=$("#q");if(q)q.value="";}
@@ -814,7 +817,7 @@ function setView(v,noRender){
 function renderFacing(list){
   const host=$("#facingHost"); host.innerHTML="";
   const stones=list.filter(e=>e.type==="stone");
-  if(!stones.length){host.append(el("div",{class:"empty"},el("p",{style:"margin:0 0 12px",text:"Once you add your first stone, this is where you'll come on hard days."}),el("button",{class:"btn primary small",text:"Add a stone",onclick:()=>openRecord({type:"stone"})})));return;}
+  if(!stones.length){host.append(el("div",{class:"empty"},el("p",{style:"margin:0 0 12px",text:"Once you add your first stone, this is where you'll come on hard days."}),el("button",{class:"btn primary small",text:"Add a big testimony",onclick:()=>openRecord({type:"stone"})})),el("p",{class:"facing-hint",text:"Has God already come through for you in one of these? Tap it to add that testimony."}),el("div",{class:"facing preview"},...FACING.filter(f=>f.tags).map(f=>el("button",{class:"face",text:f.label,onclick:()=>openRecord({type:"stone",tags:f.tags})}))));return;}
   host.append(el("div",{class:"facing"},...FACING.map(f=>el("button",{class:"face"+(f.tags?"":" all"),text:f.label,onclick:()=>openRemember(f)}))));
   const tagged=stones.filter(e=>(e.tags||[]).length).length;
   const un=untaggedStones().length;
@@ -891,11 +894,23 @@ function renderCairn(list){
   const ym=iso(today).slice(0,7);
   const MANNA_CAP=12, mannaAll=list.filter(e=>e.type==="manna"&&e.date.slice(0,7)===ym).length, mannaN=Math.min(MANNA_CAP,mannaAll);
   host.append(el("div",{class:"pile-head"},el("div",null,el("h3",{text:"Your stones of remembrance"}),el("p",{class:"pile-sub",text:all.length?"Oldest at the bottom. Tap a stone, then swipe through them all.":"Every big thing God does becomes a stone here."}))));
+  if(!all.length&&!dreamShown){
+    /* a glimpse of a full pile for 5 seconds, once each time the app opens, until the first stone */
+    dreamShown=true;
+    renderCairn(Array.from({length:15},(_,i)=>({id:"dream-"+i,type:"stone",date:thisYear+"-01-01",title:""})));
+    cairnBuilt=false;
+    const sub=host.querySelector(".pile-sub"); if(sub) sub.textContent="Picture your pile in a few years: every big thing God has done, kept.";
+    const foot=host.querySelector(".pile-foot"); if(foot) foot.replaceChildren(el("span",{class:"dream-note",text:"This is what it could look like"}));
+    const sv=host.querySelector(".pile-svg"); if(sv){sv.classList.add("dream");sv.removeAttribute("role");sv.setAttribute("aria-hidden","true");}
+    clearTimeout(dreamTimer);
+    dreamTimer=setTimeout(()=>{if(!host.querySelector(".pile-svg.dream"))return;host.classList.add("dream-out");setTimeout(()=>{host.classList.remove("dream-out");if(!entries().some(e=>e.type==="stone"))renderCairn(entries());},600);},5000);
+    return;
+  }
   if(!all.length){
     host.append(el("div",{class:"pile-empty"},
       el("div",{html:'<svg viewBox="0 0 150 70" aria-hidden="true"><ellipse cx="75" cy="60" rx="60" ry="8" fill="#000" opacity=".06"/><ellipse cx="75" cy="44" rx="36" ry="18" fill="none" stroke="var(--clay-line)" stroke-width="2" stroke-dasharray="6 6"/></svg>'}),
       el("span",{text:"Your first stone goes here."}),
-      el("button",{class:"btn primary small",text:"Add your first stone",onclick:()=>openRecord({type:"stone"})})));
+      el("button",{class:"btn primary small",text:"Add a big testimony",onclick:()=>openRecord({type:"stone"})})));
     return;
   }
   const stones=all;
