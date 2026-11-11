@@ -1924,25 +1924,47 @@ function ensureReminder(){ if(!state.reminder) state.reminder={freq:"weekly",day
 const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const FREQ_LABEL={daily:"Daily",weekly:"Weekly",monthly:"Monthly",open:"Only when I open the app"};
 function fmtTime(t){const [h,m]=t.split(":").map(Number);if(TF)try{return TF.format(new Date(2000,0,1,h,m));}catch(e){}const ap=h<12?"am":"pm";const hh=h%12||12;return hh+(m?":"+pad(m):"")+ap;}
+/* Reminder messages, matched to the time of day and day of the week they are sent.
+   when: "morning" 4:00-11:59, "afternoon" 12:00-16:59, "evening" 17:00-3:59, "night" 20:00-3:59 (only late), "any".
+   days: 0 Sunday ... 6 Saturday (only those days). */
 const DAILY_MSGS=[
-  ["Quick one","What made you smile today?"],
-  ["30 seconds, one question","What are you grateful for today?"],
-  ["Manna check","What did God sneak into your day?"],
-  ["Before you sleep","Name one good thing from today. Just one."],
-  ["Small mercies count","Light, traffic, a kind word. What was yours today?"],
-  ["Hey you","Today had at least one blessing in it. Find it?"],
-  ["Gratitude o'clock","Tap and say thank you for one thing."],
-  ["Look again","Even on a long day, He was there. Where did you see Him?"]];
+  ["Good morning","Before the day runs off, what's one thing from yesterday you're thankful for?","morning"],
+  ["New every morning","His mercies are new today. Name one from yesterday.","morning"],
+  ["Quick one","What's one thing you're grateful for as today begins?","morning"],
+  ["Manna check","What did God slip into yesterday?","morning"],
+  ["Quick one","What's made you smile so far today?","afternoon"],
+  ["Midday pause","30 seconds: what are you grateful for so far today?","afternoon"],
+  ["Manna check","What has God slipped into your day so far?","afternoon"],
+  ["Small mercies count","Light, traffic, a kind word. What's yours so far today?","afternoon"],
+  ["Quick one","What made you smile today?","evening"],
+  ["30 seconds, one question","What are you grateful for today?","evening"],
+  ["Manna check","What did God slip into your day?","evening"],
+  ["Small mercies count","Light, traffic, a kind word. What was yours today?","evening"],
+  ["Hey you","Today had at least one blessing in it. Find it?","evening"],
+  ["Gratitude o'clock","Tap and say thank you for one thing from today.","evening"],
+  ["Look again","Even on a long day, He was there. Where did you see Him?","evening"],
+  ["Before you sleep","Name one good thing from today. Just one.","night"]];
 const WEEKLY_MSGS=[
-  ["Quick one","What made you smile this week?"],
-  ["Manna check!","What did God sneak into your week?"],
-  ["Your pile is waiting","Any new stone to add this week?"],
-  ["Somebody has a testimony this week","Is it you? Drop it before you forget."],
-  ["The week is done","What's one thing He did? Say it in 30 seconds."],
-  ["Sunday reflection","Look back over your week. Where did God show up?"],
-  ["No pressure","Just one thing you're thankful for this week."],
-  ["You'd be surprised","Small things are manna too. What were yours this week?"],
-  ["Testimony time","Answered something? Kept from something? Record it."]];
+  ["Quick one","What made you smile this past week?","any"],
+  ["Manna check!","What did God slip into the past week?","any"],
+  ["Your pile is waiting","Any new stone to add from the past week?","any"],
+  ["Somebody has a testimony","Is it you? Drop it before you forget.","any"],
+  ["The week is done","What's one thing He did this week? Say it in 30 seconds.","any",[5,6,0]],
+  ["Sunday reflection","Look back over your week. Where did God show up?","any",[0]],
+  ["No pressure","Just one thing you're thankful for from the past week.","any"],
+  ["You'd be surprised","Small things are manna too. What were yours this past week?","any"],
+  ["Testimony time","Answered something? Kept from something? Record it.","any"]];
+function msgFits(m,hour,dow){
+  const w=m[2]||"any", ok=w==="any"||(w==="morning"&&hour>=4&&hour<12)||(w==="afternoon"&&hour>=12&&hour<17)||(w==="evening"&&(hour>=17||hour<4))||(w==="night"&&(hour>=20||hour<4));
+  return ok&&(!m[3]||m[3].indexOf(dow)>=0);
+}
+/* index of a message that suits this moment, avoiding the one sent last time */
+function pickMsgIndex(list,hour,dow,last){
+  let idx=[]; for(let i=0;i<list.length;i++) if(msgFits(list[i],hour,dow)) idx.push(i);
+  if(!idx.length) for(let i=0;i<list.length;i++) idx.push(i);
+  if(idx.length>1) idx=idx.filter(i=>i!==last);
+  return idx[Math.floor(Math.random()*idx.length)];
+}
 const MONTH_LINES=[
   "New year, new pile! Before January takes off, what did God do for you in {prev}?",
   "January is finally over! What did God do for you in it?",
@@ -1957,11 +1979,12 @@ const MONTH_LINES=[
   "Two months to crossover. What did God do for you in {prev}?",
   "Crossover month! Before the year closes, what did God do in {prev}?"];
 function monthlyMessage(now){
-  if(now.getDate()>7) return pick(WEEKLY_MSGS);
+  if(now.getDate()>7) return pickNow(WEEKLY_MSGS,now);
   const m=now.getMonth(), prev=MONTHS[(m+11)%12], cur=MONTHS[m];
   return ["New month","{x}".replace("{x}",MONTH_LINES[m].replace(/\{prev\}/g,prev).replace(/\{now\}/g,cur))];
 }
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function pickNow(list,now){now=now||new Date();const m=list[pickMsgIndex(list,now.getHours(),now.getDay(),-1)];return [m[0],m[1]];}
 function personalMessage(now){
   const md=iso(now).slice(5), y=now.getFullYear();
   const hit=entries().filter(e=>e.type==="stone"&&e.date.slice(5)===md&&Number(e.date.slice(0,4))<y)[0];
@@ -1972,9 +1995,9 @@ function reminderMessage(freq,now){
   now=now||new Date();
   const p=personalMessage(now); if(p&&Math.random()<.6) return p;
   if(freq==="monthly") return monthlyMessage(now);
-  if(freq==="daily") return pick(DAILY_MSGS);
+  if(freq==="daily") return pickNow(DAILY_MSGS,now);
   if(now.getDate()<=7&&Math.random()<.35) return monthlyMessage(now);
-  return pick(WEEKLY_MSGS);
+  return pickNow(WEEKLY_MSGS,now);
 }
 const APP_ICON='<svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="23" fill="#D9A62E"/><ellipse cx="50" cy="72" rx="28" ry="12" fill="#1C3F25"/><ellipse cx="50" cy="52" rx="20" ry="10" fill="#2E6B3C"/><ellipse cx="50" cy="35" rx="12" ry="7" fill="#6FA05F"/><circle cx="72" cy="22" r="5.5" fill="#FFF6DC"/></svg>';
 function renderCheckin(){
@@ -1984,7 +2007,7 @@ function renderCheckin(){
   if(!seen||dismissed===iso(today)) return;
   const real=realEntries(); const lastT=real.reduce((m,e)=>Math.max(m,e.created||0,new Date(e.date+"T12:00").getTime()),0);
   if(real.length&&Date.now()-lastT<3*864e5) return;
-  const [t,b]=today.getDate()<=7?monthlyMessage(today):pick(DAILY_MSGS);
+  const [t,b]=today.getDate()<=7?monthlyMessage(new Date()):pickNow(DAILY_MSGS,new Date());
   host.append(el("div",{class:"checkin"},
     el("span",{class:"eyebrow",text:"Check-in · "+t}),
     el("h3",{text:b}),
