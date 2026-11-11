@@ -1,5 +1,5 @@
 /* Ever Faithful offline support. Bump VERSION whenever the app files change. */
-const VERSION="ef-2026-11-10-11";
+const VERSION="ef-2026-11-11-3";
 const CORE=[
   "./","./index.html","./privacy.html","./manifest.webmanifest",
   "./icons/icon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./icons/apple-touch-icon.png","./icons/favicon-32.png",
@@ -41,10 +41,24 @@ self.addEventListener("fetch",e=>{
   if(url.origin!==self.location.origin) return;
   if(req.mode==="navigate"){
     /* pages: try the network first so updates arrive, fall back to the saved copy when offline */
-    e.respondWith(fetch(req).then(res=>{const copy=res.clone();if(res.ok)caches.open(VERSION).then(c=>c.put(req,copy));return res;})
+    e.respondWith(fetch(req).then(res=>{const copy=res.clone();if(res.ok&&!url.search)caches.open(VERSION).then(c=>c.put(req,copy));return res;})
       .catch(()=>caches.match(req,{ignoreSearch:true}).then(r=>r||caches.match("./index.html"))));
     return;
   }
   /* everything else: saved copy first, then the network */
   e.respondWith(caches.match(req,{ignoreSearch:true}).then(hit=>hit||fetch(req).then(res=>{const copy=res.clone();if(res.ok)caches.open(VERSION).then(c=>c.put(req,copy));return res;})));
+});
+
+/* reminder notifications */
+self.addEventListener("push",e=>{
+  let d={}; try{d=e.data?e.data.json():{};}catch(_){d={body:e.data?e.data.text():""};}
+  e.waitUntil(self.registration.showNotification(d.title||"Ever Faithful",{body:d.body||"What are you thankful for today?",icon:"./icons/icon-192.png",badge:"./icons/badge-96.png",tag:"ef-reminder",renotify:true,data:{url:d.url||"./"}}));
+});
+self.addEventListener("notificationclick",e=>{
+  e.notification.close();
+  const url=new URL((e.notification.data&&e.notification.data.url)||"./",self.registration.scope).href;
+  e.waitUntil(self.clients.matchAll({type:"window",includeUncontrolled:true}).then(list=>{
+    for(const c of list){ if(c.url.startsWith(self.registration.scope)&&"focus" in c){ if("navigate" in c) c.navigate(url).catch(()=>{}); return c.focus(); } }
+    return self.clients.openWindow(url);
+  }));
 });
