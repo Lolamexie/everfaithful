@@ -119,6 +119,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+#banners{display:flex;flex-direction:column;gap:12px}
 #banners:empty,#checkin:empty,#otd:empty{display:none}
 body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0}
 button,input,textarea{font:inherit;color:inherit}
@@ -545,6 +546,8 @@ body.locked #app, body.locked .tabbar, body.locked #layer{visibility:hidden}
 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}
 .tile{border:0;border-radius:18px;padding:12px 11px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-height:94px;font-weight:700;font-size:13px;line-height:1.2;transition:transform .14s ease}
 .tile:active{transform:scale(.96)}
+.tile{position:relative}
+.tile .tile-ex{position:absolute;top:10px;right:9px;margin:0;font-style:normal;font-size:9.5px;padding:1px 6px;color:inherit;border-color:currentColor;opacity:.8}
 .tile b{font-family:var(--f-display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
 .tile svg{width:28px;height:28px}
 .t-manna{background:var(--tile-manna);color:var(--tile-manna-ink)}
@@ -604,8 +607,8 @@ body.locked #app, body.locked .tabbar, body.locked #layer{visibility:hidden}
       <div class="hello"><h2 class="hello-name" id="greetH"><span class="hello-hi">Hello,</span><br><span id="greeting">God's workmanship</span></h2><span class="hello-ref" id="greetRef">Eph 2:10</span></div>
       <p class="muted hello-tag">He has been faithful. Write it down so you never forget.</p>
       <div class="tiles">
-        <button class="tile t-manna" data-go="manna"><b id="mannaCount">0</b><span>Manna this month</span></button>
-        <button class="tile t-stone" data-go="stone"><b id="stoneCount">0</b><span>Stones of remembrance</span></button>
+        <button class="tile t-manna" data-go="manna"><i class="ex tile-ex" hidden>Example</i><b id="mannaCount">0</b><span>Manna this month</span></button>
+        <button class="tile t-stone" data-go="stone"><i class="ex tile-ex" hidden>Example</i><b id="stoneCount">0</b><span>Stones of remembrance</span></button>
         <button class="tile t-rem" data-go="remember"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg><span>I need to remember</span></button>
       </div>
     </section>
@@ -850,6 +853,7 @@ function render(){
   const ym=iso(today).slice(0,7);
   countTo($("#mannaCount"),list.filter(e=>e.type==="manna"&&e.date.slice(0,7)===ym).length);
   countTo($("#stoneCount"),list.filter(e=>e.type==="stone").length);
+  document.querySelectorAll(".tile-ex").forEach(x=>{x.hidden=!usingExamples();});
   renderBanners(list); renderCheckin(); renderCairn(list); renderOTD(list); renderTools(list); renderList(list); renderFacing(list);
   const vk=(view==="manna"||view==="stone")?"list":view;
   ["home","list","remember"].forEach(k=>{$("#view-"+k).hidden=k!==vk;});
@@ -887,6 +891,10 @@ function renderBanners(list){
     b.append(el("button",{class:"xo-banner",onclick:()=>openReview(xo)},el("span",{class:"xo-year",text:String(xo)}),el("div",null,el("b",{text:"Your crossover review is ready"}),el("span",{text:"Your year in review: everything He did for you in "+xo+"."}))));
     return;
   }
+  if(usingExamples()){
+    let dis=false; try{dis=localStorage.getItem("everfaithful.exnote")==="1";}catch(e){}
+    if(!dis) b.append(el("div",{class:"ex-note"},el("span",null,el("b",{text:"These are examples, not someone else's entries. "}),"They disappear when you save your first entry."),el("button",{class:"linkbtn",text:"Got it",onclick:e=>{try{localStorage.setItem("everfaithful.exnote","1");}catch(_){}e.target.closest(".ex-note").remove();renderCheckin();}})));
+  }
   const ic=installCard();
   if(ic){ b.append(ic); return; }
   const rr=ensureReminder(); let pdis=false; try{pdis=localStorage.getItem("everfaithful.pushinvite")==="1";}catch(e){}
@@ -898,10 +906,6 @@ function renderBanners(list){
       el("div",{class:"b-actions"},el("button",{class:"btn primary small",text:"Turn it on",onclick:()=>{hide();openReminderSettings();}}),el("button",{class:"btn ghost small",text:"No thanks",onclick:e=>{hide();e.target.closest(".banner").remove();}})))));
     return;
   }
-  if(usingExamples()){
-    let dis=false; try{dis=localStorage.getItem("everfaithful.exnote")==="1";}catch(e){}
-    if(!dis) b.append(el("div",{class:"ex-note"},el("span",null,el("b",{text:"These are examples. "}),"They disappear when you save your first entry."),el("button",{class:"linkbtn",text:"Got it",onclick:()=>{try{localStorage.setItem("everfaithful.exnote","1");}catch(e){}b.innerHTML="";renderCheckin();}})));
-  }
 }
 
 /* ---------- the cairn ---------- */
@@ -912,7 +916,7 @@ function renderCairn(list){
   const all=list.filter(e=>e.type==="stone").sort((a,b)=>a.date.localeCompare(b.date)||(a.created||0)-(b.created||0));
   const ym=iso(today).slice(0,7);
   const MANNA_CAP=12, mannaAll=list.filter(e=>e.type==="manna"&&e.date.slice(0,7)===ym).length, mannaN=Math.min(MANNA_CAP,mannaAll);
-  host.append(el("div",{class:"pile-head"},el("div",null,el("h3",{text:"Your stones of remembrance"}),el("p",{class:"pile-sub",text:all.length?"Oldest at the bottom. Tap a stone, then swipe through them all.":"Every big thing God does becomes a stone here."}))));
+  host.append(el("div",{class:"pile-head"},el("div",null,el("h3",{text:usingExamples()?"Example stones":"Your stones of remembrance"}),el("p",{class:"pile-sub",text:usingExamples()?"This is how your pile will grow. Yours replace these when you save your first entry.":all.length?"Oldest at the bottom. Tap a stone, then swipe through them all.":"Every big thing God does becomes a stone here."}))));
   if(!all.length&&!dreamShown){
     /* a glimpse of a full pile for 5 seconds, once each time the app opens, until the first stone */
     dreamShown=true;
@@ -1002,7 +1006,7 @@ function renderOTD(list){
   if(!hit) return;
   const n=thisYear-Number(hit.date.slice(0,4));
   o.append(el("button",{class:"otd",onclick:()=>openDetail(hit)},
-    el("span",{class:"eyebrow",text:"On this day, "+n+(n===1?" year":" years")+" ago"}),
+    el("span",{class:"eyebrow",text:"On this day, "+n+(n===1?" year":" years")+" ago"},hit.example?el("span",{class:"ex",text:"Example"}):null),
     el("h3",{text:hit.title||"A day of thanks"}),
     el("p",{text:hit.text})));
 }
@@ -1922,7 +1926,7 @@ function openReview(yr){
 /* ---------- reminders & check-ins ---------- */
 function ensureReminder(){ if(!state.reminder) state.reminder={freq:"weekly",day:0,time:"19:00",asked:false}; return state.reminder; }
 const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-const FREQ_LABEL={daily:"Daily",weekly:"Weekly",monthly:"Monthly",open:"Only when I open the app"};
+const FREQ_LABEL={daily:"Daily",weekly:"Weekly",monthly:"Monthly",open:"Off"};
 function fmtTime(t){const [h,m]=t.split(":").map(Number);if(TF)try{return TF.format(new Date(2000,0,1,h,m));}catch(e){}const ap=h<12?"am":"pm";const hh=h%12||12;return hh+(m?":"+pad(m):"")+ap;}
 /* Reminder messages, matched to the time of day and day of the week they are sent.
    when: "morning" 4:00-11:59, "afternoon" 12:00-16:59, "evening" 17:00-3:59, "night" 20:00-3:59 (only late), "any".
@@ -2017,7 +2021,7 @@ function renderCheckin(){
 }
 function freqPicker(r,onChange){
   const wrap=el("div",{class:"tags"});
-  ["daily","weekly","monthly","open"].forEach(f=>{const b=el("button",{type:"button",class:"tagbtn","aria-pressed":String(r.freq===f),text:FREQ_LABEL[f]+(f==="weekly"?" (recommended)":"")});
+  ["daily","weekly","monthly"].forEach(f=>{const b=el("button",{type:"button",class:"tagbtn","aria-pressed":String(r.freq===f),text:FREQ_LABEL[f]+(f==="weekly"?" (recommended)":"")});
     b.onclick=()=>{r.freq=f;[...wrap.children].forEach(c=>c.setAttribute("aria-pressed",String(c===b)));onChange&&onChange();};wrap.append(b);});
   return wrap;
 }
@@ -2221,7 +2225,7 @@ function reminderForm(draft,onChange){
   return {picker:freqPicker(draft,sync),rows,calBtns,calNote,sync};
 }
 function reminderSummary(){const r=ensureReminder();
-  if(r.freq==="open") return "A check-in card when you open the app";
+  if(r.freq==="open") return "Not set up yet";
   const when=r.freq==="daily"?"Every day at "+fmtTime(r.time):r.freq==="weekly"?DAYS[r.day]+"s at "+fmtTime(r.time):"1st of each month at "+fmtTime(r.time);
   return r.push?when+", as a notification":r.calendar?when+", in your calendar":"Not set up yet";}
 function maybeAskReminder(delay){
@@ -2230,7 +2234,7 @@ function maybeAskReminder(delay){
 }
 /* one sheet for both the first ask and the settings */
 function reminderSheet(first){
-  const r=ensureReminder(); const draft={freq:first?"weekly":r.freq,day:r.day,time:r.time};
+  const r=ensureReminder(); const draft={freq:(first||r.freq==="open")?"weekly":r.freq,day:r.day,time:r.time};
   const needInstall=pushNeedsInstall(), canPush=pushReady()&&!needInstall;
   const calDone=(how)=>{const wasPush=r.push;Object.assign(r,draft,{asked:true,calendar:how});persist();if(wasPush)pushOff(r);closeLayer();render();toast(how==="google"?"Tap Save in Google Calendar to finish.":"Open the downloaded file to add the reminder to your calendar.");};
   const f=reminderForm(draft,calDone);
