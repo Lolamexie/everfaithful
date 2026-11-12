@@ -230,6 +230,9 @@ h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:
 .s3{border-radius:40% 60% 48% 52%/54% 46% 58% 42%;--rock:#B6A28B;--rock-ink:#33281C}
 
 .empty{padding:28px 20px;border-radius:20px;border:1px dashed var(--line);text-align:center;color:var(--muted)}
+.empty.teach{display:flex;flex-direction:column;align-items:center;gap:10px}
+.empty.teach h3{margin:0;color:var(--fg);font-size:18px}
+.empty.teach p{margin:0 0 4px;line-height:1.5}
 
 /* mic fab */
 .fab-wrap{position:fixed;left:0;right:0;bottom:0;padding-bottom:calc(18px + env(safe-area-inset-bottom, 0px));display:flex;justify-content:center;pointer-events:none;background:linear-gradient(to top,var(--bg) 40%,rgba(247,245,239,0));padding-top:30px}
@@ -494,6 +497,13 @@ body.locked #app, body.locked .tabbar, body.locked #layer{visibility:hidden}
 .detail-actions .btn{padding:12px 8px;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px}
 .detail-actions svg{width:17px;height:17px;flex:none}
 .menu-list{display:flex;flex-direction:column;gap:10px}
+.how-list{display:flex;flex-direction:column;gap:16px}
+.how-row{display:flex;gap:14px;align-items:flex-start}
+.how-row b{display:block;font-size:16px;margin-bottom:2px}
+.how-row>div>span{color:var(--muted);font-size:14.5px;line-height:1.45}
+.how-ic{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
+.how-ic svg{width:24px;height:24px}
+.how-mic{background:var(--coral);color:var(--on-coral);border-radius:50%}
 .menu-group{margin:14px 0 -2px 4px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .menu-group:first-child{margin-top:0}
 .tagbtn.sug{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-soft)}
@@ -541,6 +551,10 @@ body.locked #app, body.locked .tabbar, body.locked #layer{visibility:hidden}
 .tb[aria-current="page"]{color:var(--teal)}
 .tb-mic{justify-self:center;width:62px;height:62px;border-radius:50%;border:0;background:var(--coral);color:var(--on-coral);display:grid;place-items:center;margin-bottom:6px;transform:translateY(-14px);box-shadow:0 10px 22px -8px var(--coral),0 0 0 5px var(--bg);transition:transform .14s ease}
 .tb-mic:active{transform:translateY(-14px) scale(.94)}
+.mic-hint{position:absolute;left:50%;bottom:calc(100% + 22px);transform:translateX(-50%);width:max-content;max-width:min(270px,calc(100vw - 40px));border:0;border-radius:16px;padding:11px 15px;background:var(--fg);color:var(--bg);font:inherit;font-size:14.5px;font-weight:700;line-height:1.35;text-align:center;box-shadow:0 10px 24px -10px rgba(0,0,0,.45);animation:hintBob 2.4s ease-in-out infinite}
+.mic-hint::after{content:"";position:absolute;left:50%;top:100%;margin-left:-8px;border:8px solid transparent;border-top-color:var(--fg)}
+@keyframes hintBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}
+body.has-mic-hint .app{padding-bottom:210px}
 .tb-mic svg{width:28px;height:28px}
 .sheet h2[tabindex]:focus{outline:none}
 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}
@@ -738,7 +752,10 @@ const EXAMPLES=[
   {id:"x15",type:"manna",text:"Sunday service was exactly what I needed.",date:(thisYear-2)+"-09-08",example:true}
 ].filter(e=>e.date<=iso(today));
 const realEntries=()=>state.entries;
-const usingExamples=()=>state.entries.length===0&&!state.started;
+/* opened from the home screen (installed app) */
+const APP_MODE=(()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){return false;}})();
+/* examples show only in the browser; the installed app starts at zero */
+const usingExamples=()=>state.entries.length===0&&!state.started&&!APP_MODE;
 const entries=()=>usingExamples()?EXAMPLES:state.entries;
 const findEntry=id=>entries().find(e=>e.id===id);
 
@@ -821,7 +838,7 @@ function setView(v,noRender){
 function renderFacing(list){
   const host=$("#facingHost"); host.innerHTML="";
   const stones=list.filter(e=>e.type==="stone");
-  if(!stones.length){host.append(el("div",{class:"empty"},el("p",{style:"margin:0 0 12px",text:"Once you add your first stone, this is where you'll come on hard days."}),el("button",{class:"btn primary small",text:"Add a big testimony",onclick:()=>openRecord({type:"stone"})})),el("p",{class:"facing-hint",text:"Has God already come through for you in one of these? Tap it to add that testimony."}),el("div",{class:"facing preview"},...FACING.filter(f=>f.tags).map(f=>el("button",{class:"face",text:f.label,onclick:()=>openRecord({type:"stone",tags:f.tags})}))));return;}
+  if(!stones.length){host.append(el("div",{class:"empty"},el("p",{style:"margin:0 0 12px",text:"On a hard day, come here and pick what you're facing. We'll show you the times God already came through. It fills up as you add stones."}),el("button",{class:"btn primary small",text:"Add a big testimony",onclick:()=>openRecord({type:"stone"})})),el("p",{class:"facing-hint",text:"Has God already come through for you in one of these? Tap it to add that testimony."}),el("div",{class:"facing preview"},...FACING.filter(f=>f.tags).map(f=>el("button",{class:"face",text:f.label,onclick:()=>openRecord({type:"stone",tags:f.tags})}))));return;}
   host.append(el("div",{class:"facing"},...FACING.map(f=>el("button",{class:"face"+(f.tags?"":" all"),text:f.label,onclick:()=>openRemember(f)}))));
   const tagged=stones.filter(e=>(e.tags||[]).length).length;
   const un=untaggedStones().length;
@@ -854,12 +871,21 @@ function render(){
   countTo($("#mannaCount"),list.filter(e=>e.type==="manna"&&e.date.slice(0,7)===ym).length);
   countTo($("#stoneCount"),list.filter(e=>e.type==="stone").length);
   document.querySelectorAll(".tile-ex").forEach(x=>{x.hidden=!usingExamples();});
-  renderBanners(list); renderCheckin(); renderCairn(list); renderOTD(list); renderTools(list); renderList(list); renderFacing(list);
+  renderBanners(list); renderCheckin(); renderMicHint(); renderCairn(list); renderOTD(list); renderTools(list); renderList(list); renderFacing(list);
   const vk=(view==="manna"||view==="stone")?"list":view;
   ["home","list","remember"].forEach(k=>{$("#view-"+k).hidden=k!==vk;});
   document.querySelectorAll(".tb").forEach(b=>{if(b.dataset.view===view)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
   $("#listTitle").textContent=tab==="manna"?"Manna":"Stones";
   $("#tabSub").textContent=tab==="manna"?"Daily thanks. Small or big, drop it here anytime.":"The big ones. Testimonies to look back on when you need to trust Him again."+(state.entries.some(e=>e.type==="stone")?"":" (Tap the mic to add yours.)");
+}
+/* first-time hint above the mic in the installed app, until the first entry is saved */
+function renderMicHint(){
+  const nav=document.querySelector(".tabbar"); if(!nav) return;
+  let h=$("#micHint"); const show=APP_MODE&&view==="home"&&!state.started&&!realEntries().length;
+  document.body.classList.toggle("has-mic-hint",show);
+  if(!show){ if(h) h.remove(); return; }
+  if(h) return;
+  nav.append(el("button",{id:"micHint",class:"mic-hint",type:"button",onclick:()=>openRecord()},el("span",{text:"Tap here and tell God thank you for something today."})));
 }
 function crossoverYear(){
   const m=today.getMonth(), d=today.getDate();
@@ -1036,7 +1062,12 @@ function renderList(list){
   const res=$("#results"); res.hidden=!filtering;
   if(filtering) res.textContent=items.length+(items.length===1?" result":" results");
   if(!items.length){
-    v.append(el("div",{class:"empty",text:filtering?"Nothing matches your search. Try another word or year.":tab==="manna"?"No manna yet. Tap the button below and speak your first thanks.":"No stones yet. When God does something big, record it here as a stone of remembrance."}));
+    if(filtering){v.append(el("div",{class:"empty",text:"Nothing matches your search. Try another word or year."}));return;}
+    const isM=tab==="manna";
+    v.append(el("div",{class:"empty teach"},
+      el("h3",{text:isM?"Your daily thanks go here":"Your big testimonies go here"}),
+      el("p",{text:isM?"Manna is the small, everyday things God does: light all evening, a safe trip home, a kind word. Say one each day and watch them add up.":"Stones are the big things you never want to forget: the job, the healing, the open door. Add ones from years back too. On hard days, they remind you He came through."}),
+      el("button",{class:"btn primary small",text:isM?"Add today's manna":"Add a big testimony",onclick:()=>openRecord({type:tab})})));
     return;
   }
   if(tab==="manna"){
@@ -1318,7 +1349,7 @@ function openRecord(opts){
     const first=state.entries.length===1;
     lastAddedId=newId; setView(type==="stone"?"home":"manna",true); closeLayer(); render(); celebrate(type);
     toast(type==="stone"?"Stone added. Saved only on this phone.":"Manna saved. Only you can see it.");
-    if(first) setTimeout(()=>toast("Examples cleared. This space is all yours now."),3000);
+    if(first) setTimeout(()=>toast(APP_MODE?"Your first entry is saved. This space is all yours.":"Examples cleared. This space is all yours now."),3000);
     maybeAskReminder(first?5600:2800);
   }});
   const setupTop=setup?el("div",{style:"display:flex;flex-direction:column;gap:8px"},
@@ -2009,7 +2040,7 @@ function renderCheckin(){
   if($("#banners").querySelector(".banner,.ex-note,.install-card,.xo-banner")) return;
   let seen=false,dismissed=""; try{seen=localStorage.getItem(SEEN)==="1";dismissed=localStorage.getItem("everfaithful.checkin")||"";}catch(e){}
   if(!seen||dismissed===iso(today)) return;
-  const real=realEntries(); const lastT=real.reduce((m,e)=>Math.max(m,e.created||0,new Date(e.date+"T12:00").getTime()),0);
+  const real=realEntries(); if(APP_MODE&&!real.length) return; const lastT=real.reduce((m,e)=>Math.max(m,e.created||0,new Date(e.date+"T12:00").getTime()),0);
   if(real.length&&Date.now()-lastT<3*864e5) return;
   const [t,b]=today.getDate()<=7?monthlyMessage(new Date()):pickNow(DAILY_MSGS,new Date());
   host.append(el("div",{class:"checkin"},
@@ -2392,6 +2423,19 @@ function appearanceRow(){
 }
 
 /* ---------- menu ---------- */
+function openHowItWorks(){
+  const row=(cls,svg,t,d)=>el("div",{class:"how-row"},el("span",{class:"how-ic "+cls,html:svg}),el("div",null,el("b",{text:t}),el("span",{text:d})));
+  const sv=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';
+  openScrim(el("div",{class:"sheet",role:"dialog","aria-modal":"true","aria-label":"How it works"},
+    el("div",{class:"sheet-head"},el("h2",{text:"How it works"}),closeBtn()),
+    el("div",{class:"how-list"},
+      row("how-mic",sv('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>'),"Tap the mic and speak","Choose Manna or Stone, then say what God did in your own words. You can type too."),
+      row("t-manna",sv('<circle cx="12" cy="13" r="5"/><path d="M12 3v2M18.4 6.6 17 8M5.6 6.6 7 8"/>'),"Manna: daily thanks","The small, everyday things. Each one this month shows as a gold drop above your pile."),
+      row("t-stone",sv('<ellipse cx="12" cy="18" rx="8" ry="3.2"/><ellipse cx="12" cy="11.5" rx="5.5" ry="2.6"/><ellipse cx="12" cy="6" rx="3.2" ry="1.8"/>'),"Stones: the big testimonies","The ones you never want to forget, even from years back. Each one adds a stone to your pile."),
+      row("t-rem",sv('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/>'),"Remember: for hard days","Pick what you're facing and see the times God already came through.")),
+    el("p",{class:"muted",style:"margin:0;font-size:14px",text:"Everything stays on this phone. Back up now and then from the menu so you never lose it."}),
+    el("button",{class:"btn primary block",text:"Got it",onclick:closeLayer})));
+}
 function openMenu(){
   const pinOn=!!getPin();
   const years=[...new Set(entries().map(e=>Number(e.date.slice(0,4))))].sort((a,b)=>b-a);
@@ -2400,8 +2444,9 @@ function openMenu(){
   openScrim(el("div",{class:"sheet",role:"dialog","aria-modal":"true","aria-label":"Menu"},
     el("div",{class:"sheet-head"},el("h2",{text:"Ever Faithful"}),closeBtn()),
     el("div",{class:"menu-list"},
+      el("button",{class:"list-btn",onclick:()=>{closeLayer();openHowItWorks();},html:ico('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/>')+'<div><b>How it works</b><span>Manna, stones and Remember in one minute.</span></div>'}),
       el("p",{class:"menu-group",text:"Settings"}),
-      el("button",{class:"list-btn",onclick:()=>{closeLayer();openReminderSettings();},html:ico('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>')+'<div><b>Reminders: '+FREQ_LABEL[ensureReminder().freq]+'</b><span>'+reminderSummary()+'. Tap to change how often we check in.</span></div>'}),
+      el("button",{class:"list-btn",onclick:()=>{closeLayer();openReminderSettings();},html:ico('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>')+'<div><b>Reminders: '+(()=>{const r=ensureReminder();return (r.push||r.calendar)&&r.freq!=="open"?FREQ_LABEL[r.freq]:"Off";})()+'</b><span>'+reminderSummary()+'. Tap to change how often we check in.</span></div>'}),
       appearanceRow(),
       el("p",{class:"menu-group",text:"Keep your entries safe"}),
       isInstalled()?null:el("button",{class:"list-btn",onclick:()=>{closeLayer();doInstall();},html:ico('<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 7v7"/><path d="m9 11 3 3 3-3"/>')+'<div><b>Install the app</b><span>Keeps your entries safer, opens in one tap and works without internet.</span></div>'}),
