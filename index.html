@@ -2282,9 +2282,26 @@ function openReminderAsk(){reminderSheet(true);}
 function openReminderSettings(){reminderSheet(false);}
 
 /* backup (share sheet on phones, download on computers) */
+/* The file is scrambled so it can't be read at a glance (it is not a password lock). Old plain backups still restore. */
+const BK_MARK="EFB3:", BK_KEY=new TextEncoder().encode("Ever Faithful · Lamentations 3:22-23");
+function bkScramble(bytes){const out=new Uint8Array(bytes.length);for(let i=0;i<bytes.length;i++)out[i]=bytes[i]^BK_KEY[i%BK_KEY.length]^((i*131)&255);return out;}
+function bytesToB64(b){let s="";for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode.apply(null,b.subarray(i,i+8192));return btoa(s);}
+function b64ToBytes(s){const t=atob(s),u=new Uint8Array(t.length);for(let i=0;i<t.length;i++)u[i]=t.charCodeAt(i);return u;}
+function encodeBackup(obj){
+  const b64=bytesToB64(bkScramble(new TextEncoder().encode(JSON.stringify(obj))));
+  const lines=[]; for(let i=0;i<b64.length;i+=64) lines.push(b64.slice(i,i+64));
+  return "Ever Faithful backup ("+niceDate(iso(new Date()))+")\nThis file can only be opened by Ever Faithful. To bring your entries back, open everfaithful.app, then Menu, Backup and restore, Restore.\n\n"+BK_MARK+"\n"+lines.join("\n")+"\n";
+}
+function decodeBackup(text){
+  text=String(text||"").replace(/^﻿/,"").trim();
+  if(text.charAt(0)==="{") return JSON.parse(text);
+  const at=text.indexOf(BK_MARK); if(at<0) throw new Error("not a backup");
+  const bytes=bkScramble(b64ToBytes(text.slice(at+BK_MARK.length).replace(/[^A-Za-z0-9+/=]/g,"")));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
 async function doBackup(mode){
   if(!realEntries().length){toast("Nothing to back up yet");return;}
-  const payload=JSON.stringify({app:"Ever Faithful",format:2,exported:new Date().toISOString(),entries:realEntries()},null,2);
+  const payload=encodeBackup({app:"Ever Faithful",format:3,exported:new Date().toISOString(),entries:realEntries()});
   const name="EverFaithful-backup-"+iso(new Date())+".txt";
   const blob=new Blob([payload],{type:"text/plain"});
   let r;
@@ -2296,34 +2313,62 @@ async function doBackup(mode){
 }
 
 /* ---------- backup & restore ---------- */
+function restoreFromText(text){
+  let d; try{d=decodeBackup(text);}catch(e){toast("That isn't an Ever Faithful backup. Choose the backup file you saved.");return false;}
+  if(!d||d.app!=="Ever Faithful"||!Array.isArray(d.entries)){toast("That isn't an Ever Faithful backup. Choose the backup file you saved.");return false;}
+  const have=new Set(state.entries.map(e=>e.id)); let added=0;
+  for(const e of d.entries){ if(e&&e.id&&e.text&&e.date&&(e.type==="manna"||e.type==="stone")&&!have.has(e.id)){state.entries.push({id:String(e.id),type:e.type,text:String(e.text),date:String(e.date).slice(0,10),title:String(e.title||""),scripture:String(e.scripture||""),tags:Array.isArray(e.tags)?e.tags.filter(t=>TAGNAME[t]):[],created:Number(e.created)||0,fav:e.type==="manna"&&e.fav===true});added++;} }
+  if(added){state.started=true; if(!state.lastBackup) state.lastBackup=Date.now();}
+  persist(); closeLayer(); cairnBuilt=false; render();
+  toast(added?"Your entries are back ("+added+"). Set your PIN and reminders again from the menu.":"Everything in that backup is already here",added?6000:2800);
+  return true;
+}
 function restoreFrom(file){
   const r=new FileReader();
-  r.onload=()=>{
-    try{
-      const d=JSON.parse(r.result);
-      if(!d||d.app!=="Ever Faithful"||!Array.isArray(d.entries))throw 0;
-      const have=new Set(state.entries.map(e=>e.id)); let added=0;
-      for(const e of d.entries){ if(e&&e.id&&e.text&&e.date&&(e.type==="manna"||e.type==="stone")&&!have.has(e.id)){state.entries.push({id:String(e.id),type:e.type,text:String(e.text),date:String(e.date).slice(0,10),title:String(e.title||""),scripture:String(e.scripture||""),tags:Array.isArray(e.tags)?e.tags.filter(t=>TAGNAME[t]):[],created:Number(e.created)||0,fav:e.type==="manna"&&e.fav===true});added++;} }
-      if(added){state.started=true; if(!state.lastBackup) state.lastBackup=Date.now();}
-      persist(); closeLayer(); cairnBuilt=false; render();
-      toast(added?"Your entries are back ("+added+"). Set your PIN and reminders again from the menu.":"Everything in that backup is already here",added?6000:2800);
-    }catch(e){toast("That file isn't an Ever Faithful backup. Choose the backup file you saved.");}
-  };
+  r.onload=()=>restoreFromText(r.result);
+  r.onerror=()=>toast("Couldn't open that file. Try again.");
   r.readAsText(file);
+}
+function openPasteRestore(){
+  const ta=el("textarea",{class:"inp",id:"pasteBackup",rows:"6",placeholder:"Paste your backup here","aria-label":"Backup text"});
+  openScrim(el("div",{class:"sheet",role:"dialog","aria-modal":"true","aria-label":"Paste a backup"},
+    el("div",{class:"sheet-head"},el("h2",{text:"Paste a backup"}),closeBtn()),
+    el("p",{class:"muted",style:"margin:-6px 0 0",text:"Open your backup file (for example in WhatsApp), select all the text, copy it, then paste it here."}),
+    ta,
+    el("button",{class:"btn primary block",text:"Restore",onclick:()=>{if(!ta.value.trim()){toast("Paste your backup first");return;}restoreFromText(ta.value);}})));
 }
 function openBackup(){
   const fileIn=el("input",{type:"file",id:"restoreFile",accept:".txt,.json,text/plain,application/json",hidden:"",onchange:e=>{if(e.target.files[0])restoreFrom(e.target.files[0]);}});
   const last=state.lastBackup?niceDate(iso(new Date(state.lastBackup))):"Never";
+  const saveTip=isIOS?'When the options appear, choose <b>Save to Files</b>. That makes restoring easy. You can also send a copy to WhatsApp or email.'
+    :'Send the file to WhatsApp "Message yourself", your email or Google Drive.';
+  const restoreTip=isIOS?"Saved it in WhatsApp? Open the file there, tap the share button, choose Save to Files, then come back and tap Restore."
+    :(isAndroid?(isInstalled()?"Saved it in WhatsApp? Open the file there, tap Share and choose Ever Faithful. It restores straight away.":"Saved it in WhatsApp? Open the file there, tap the menu and choose Save (or Download), then come back and tap Restore."):"Pick your backup file.");
   openScrim(el("div",{class:"sheet",role:"dialog","aria-modal":"true","aria-label":"Backup"},
     el("div",{class:"sheet-head"},el("h2",{text:"Keep it for life"}),closeBtn()),
     el("p",{class:"muted",style:"margin:0",html:"Your entries live only on this phone, not online. A backup saves a copy of all of them into one small file that you keep. It takes about 30 seconds. We'll remind you about once a month when you've added something new. <b class='alert-text'>Always back up before changing phones.</b>"}),
     el("p",{class:"muted",style:"margin:0;font-size:14px",text:"The backup file is for Ever Faithful to read, not for you. Want something to read and print?"}),
     el("button",{class:"btn ghost",style:"align-self:flex-start",text:"Make a Book of Remembrance (PDF)",onclick:()=>{closeLayer();openBook();}}),
-    el("button",{class:"list-btn",onclick:doBackup,html:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg><div><b>Back up now</b><span>Last backup: '+last+'. Send the file to WhatsApp "Message yourself", your email or Google Drive.</span></div>'}),
+    el("button",{class:"list-btn",onclick:()=>doBackup(),html:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg><div><b>Back up now</b><span>Last backup: '+last+'. '+saveTip+'</span></div>'}),
     isTouch?el("button",{class:"linkbtn",style:"align-self:flex-start;font-weight:600",text:"Or save the file to this phone instead",onclick:()=>doBackup("download")}):null,
-    el("button",{class:"list-btn",onclick:()=>fileIn.click(),html:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 3h14"/></svg><div><b>Restore from a backup</b><span>On a new phone, pick your backup file. Nothing is overwritten; missing entries are added back.</span></div>'}),
+    el("button",{class:"list-btn",onclick:()=>fileIn.click(),html:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 3h14"/></svg><div><b>Restore from a backup</b><span>'+restoreTip+' Nothing is overwritten; missing entries are added back.</span></div>'}),
+    el("button",{class:"linkbtn",style:"align-self:flex-start;font-weight:600",text:"Or paste a backup",onclick:()=>{closeLayer();openPasteRestore();}}),
     fileIn,
-    el("div",{class:"privacy-line",html:ICON_LOCK+"<span>Your backup file holds your private entries. Only send it to yourself.</span>"})));
+    el("div",{class:"privacy-line",html:ICON_LOCK+"<span>Your backup file holds your private entries. It's scrambled so it can't be read at a glance, but only send it to yourself.</span>"})));
+}
+/* Android: a backup shared to Ever Faithful from WhatsApp or Files arrives here */
+async function checkSharedBackup(){
+  try{
+    if(new URLSearchParams(location.search).get("restore")!=="shared") return;
+    history.replaceState(null,"",location.pathname);
+    const c=await caches.open("ef-share"), res=await c.match("./__shared-backup"); if(!res) return;
+    const text=await res.text(); await c.delete("./__shared-backup");
+    if(document.body.classList.contains("locked")){toast("Unlock Ever Faithful, then share the backup again.");return;}
+    openScrim(el("div",{class:"sheet",role:"dialog","aria-modal":"true","aria-label":"Restore backup"},
+      el("div",{class:"sheet-head"},el("h2",{text:"Restore this backup?"}),closeBtn()),
+      el("p",{class:"muted",style:"margin:-6px 0 0",text:"Entries from the backup will be added to this phone. Nothing here is overwritten."}),
+      el("button",{class:"btn primary block",text:"Restore",onclick:()=>restoreFromText(text)})));
+  }catch(e){}
 }
 
 /* ---------- appearance ---------- */
@@ -2506,6 +2551,7 @@ askPersist();
 countVisit();
 try{if(new URLSearchParams(location.search).has("add")){history.replaceState(null,"",location.pathname);if(!document.body.classList.contains("locked"))setTimeout(()=>{if(!$("#layer").children.length)openRecord({type:"manna"});},500);}}catch(e){}
 setTimeout(pushRefresh,4000);
+checkSharedBackup();
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1")){
   window.addEventListener("load",()=>{navigator.serviceWorker.register("./sw.js").catch(()=>{});});
 }

@@ -1,5 +1,5 @@
 /* Ever Faithful offline support. Bump VERSION whenever the app files change. */
-const VERSION="ef-2026-11-11-4";
+const VERSION="ef-2026-11-12-1";
 const CORE=[
   "./","./index.html","./privacy.html","./manifest.webmanifest",
   "./icons/icon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./icons/apple-touch-icon.png","./icons/favicon-32.png",
@@ -36,6 +36,14 @@ self.addEventListener("install",e=>{e.waitUntil(caches.open(VERSION).then(c=>c.a
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener("fetch",e=>{
   const req=e.request;
+  /* Android: "Share to Ever Faithful" from WhatsApp or Files sends the backup here */
+  if(req.method==="POST"&&new URL(req.url).pathname.endsWith("/share-backup")){
+    e.respondWith((async()=>{
+      try{const f=(await req.formData()).get("backup"); if(f&&f.text){const c=await caches.open("ef-share");await c.put("./__shared-backup",new Response(await f.text(),{headers:{"Content-Type":"text/plain"}}));}}catch(_){}
+      return Response.redirect("./?restore=shared",303);
+    })());
+    return;
+  }
   if(req.method!=="GET") return;
   const url=new URL(req.url);
   if(url.origin!==self.location.origin) return;
@@ -52,7 +60,7 @@ self.addEventListener("fetch",e=>{
 /* reminder notifications */
 self.addEventListener("push",e=>{
   let d={}; try{d=e.data?e.data.json():{};}catch(_){d={body:e.data?e.data.text():""};}
-  e.waitUntil(self.registration.showNotification(d.title||"Ever Faithful",{body:d.body||"What are you thankful for today?",icon:"./icons/icon-192.png",badge:"./icons/badge-96.png",tag:"ef-reminder",renotify:true,data:{url:d.url||"./"}}));
+  e.waitUntil(self.registration.showNotification(d.title||"Ever Faithful",{body:d.body||"What are you thankful for today?",icon:"./icons/icon-192.png",badge:"./icons/badge-96.png",data:{url:d.url||"./"}}));
 });
 self.addEventListener("notificationclick",e=>{
   e.notification.close();
