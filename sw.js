@@ -1,5 +1,5 @@
 /* Ever Faithful offline support. Bump VERSION whenever the app files change. */
-const VERSION="ef-2026-11-14-2";
+const VERSION="ef-2026-11-14-3";
 const CORE=[
   "./","./index.html","./privacy.html","./manifest.webmanifest",
   "./icons/icon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./icons/apple-touch-icon.png","./icons/favicon-32.png",
