@@ -11,7 +11,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Ever Faithful">
@@ -497,6 +497,8 @@ body.locked #app, body.locked .tabbar, body.locked #layer{visibility:hidden}
 .detail-actions .btn{padding:12px 8px;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px}
 .detail-actions svg{width:17px;height:17px;flex:none}
 .menu-list{display:flex;flex-direction:column;gap:10px}
+.note.carry{display:flex;align-items:center;gap:12px;padding:10px 12px;font-size:14px;line-height:1.4}
+.note.carry .btn{flex:none}
 .how-list{display:flex;flex-direction:column;gap:16px}
 .how-row{display:flex;gap:14px;align-items:flex-start}
 .how-row b{display:block;font-size:16px;margin-bottom:2px}
@@ -904,7 +906,7 @@ function renderBanners(list){
   const firstT=realEntries().reduce((m,e)=>Math.min(m,e.created||Date.now()),Date.now());
   const lastB=state.lastBackup||0, newSince=realEntries().filter(e=>(e.created||0)>lastB).length;
   const due=days===null?(Date.now()-firstT>=7*864e5):(days>=30&&newSince>0);
-  if(!usingExamples()&&due&&realEntries().length>=1){
+  if(APP_MODE&&!usingExamples()&&due&&realEntries().length>=1){
     b.append(el("div",{class:"banner warn"},
       el("div",{class:"b-body"},
         el("strong",{text:days===null?"Time for your first backup?":"Time for a quick backup?"}),
@@ -1131,7 +1133,7 @@ function entryActions(e,confirmBox){
     el("button",{class:"btn ghost",html:ICON_TRASH+"Delete",onclick:()=>{
       if(e.example){toast("Examples disappear when you save your first entry.");return;}
       confirmBox.innerHTML="";
-      confirmBox.append(el("div",{class:"confirm"},el("span",{text:"Delete this entry? This can't be undone unless it's in a backup."}),
+      confirmBox.append(el("div",{class:"confirm"},el("span",{text:APP_MODE?"Delete this entry? This can't be undone unless it's in a backup.":"Delete this entry? This can't be undone."}),
         el("div",{class:"actions"},el("button",{class:"btn ghost small",text:"Keep it",onclick:()=>confirmBox.innerHTML=""}),
           el("button",{class:"btn primary small",text:"Delete",onclick:()=>{state.entries=state.entries.filter(x=>x.id!==e.id);persist();closeLayer();render();toast("Deleted");}}))));
     }})];
@@ -1849,7 +1851,7 @@ function openBook(preset){
     el("div",{class:"f",style:"display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"},"What should it cover?",scopeChips),
     tagChips?el("div",{class:"f",style:"display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"},el("span",null,"Or one topic ",el("small",{style:"font-weight:400;color:var(--muted)",text:"(e.g. every time He provided)"})),tagChips):null,
     mannaRow,
-    el("div",{class:"note",text:"Book size A5. To print at home on A4 paper, choose Fit to page. This book can't restore your entries on a new phone. For that, use Backup and restore in the menu."}),
+    el("div",{class:"note",text:"Book size A5. To print at home on A4 paper, choose Fit to page."+(APP_MODE?" This book can't restore your entries on a new phone. For that, use Backup and restore in the menu.":"")}),
     el("div",{class:"privacy-line",html:ICON_LOCK+"<span>Made on this phone. Anyone you give the PDF to can read it.</span>"}),
     go, status);
   close=stackSheet(sheet); sync();
@@ -1960,7 +1962,7 @@ const DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturda
 const FREQ_LABEL={daily:"Daily",weekly:"Weekly",monthly:"Monthly",open:"Off"};
 function fmtTime(t){const [h,m]=t.split(":").map(Number);if(TF)try{return TF.format(new Date(2000,0,1,h,m));}catch(e){}const ap=h<12?"am":"pm";const hh=h%12||12;return hh+(m?":"+pad(m):"")+ap;}
 /* Reminder messages, matched to the time of day and day of the week they are sent.
-   when: "morning" 4:00-11:59, "afternoon" 12:00-16:59, "evening" 17:00-3:59, "night" 20:00-3:59 (only late), "any".
+   when: "morning" 4:00-11:59, "midday" 11:00-13:59, "afternoon" 12:00-16:59, "evening" 17:00-3:59, "night" 20:00-3:59 (only late), "any".
    days: 0 Sunday ... 6 Saturday (only those days). */
 const DAILY_MSGS=[
   ["Good morning","Before the day runs off, what's one thing from yesterday you're thankful for?","morning"],
@@ -1968,7 +1970,7 @@ const DAILY_MSGS=[
   ["Quick one","What's one thing you're grateful for as today begins?","morning"],
   ["Manna check","What did God slip into yesterday?","morning"],
   ["Quick one","What's made you smile so far today?","afternoon"],
-  ["Midday pause","30 seconds: what are you grateful for so far today?","afternoon"],
+  ["Midday pause","30 seconds: what are you grateful for so far today?","midday"],
   ["Manna check","What has God slipped into your day so far?","afternoon"],
   ["Small mercies count","Light, traffic, a kind word. What's yours so far today?","afternoon"],
   ["Quick one","What made you smile today?","evening"],
@@ -1990,7 +1992,7 @@ const WEEKLY_MSGS=[
   ["You'd be surprised","Small things are manna too. What were yours this past week?","any"],
   ["Testimony time","Answered something? Kept from something? Record it.","any"]];
 function msgFits(m,hour,dow){
-  const w=m[2]||"any", ok=w==="any"||(w==="morning"&&hour>=4&&hour<12)||(w==="afternoon"&&hour>=12&&hour<17)||(w==="evening"&&(hour>=17||hour<4))||(w==="night"&&(hour>=20||hour<4));
+  const w=m[2]||"any", ok=w==="any"||(w==="morning"&&hour>=4&&hour<12)||(w==="midday"&&hour>=11&&hour<14)||(w==="afternoon"&&hour>=12&&hour<17)||(w==="evening"&&(hour>=17||hour<4))||(w==="night"&&(hour>=20||hour<4));
   return ok&&(!m[3]||m[3].indexOf(dow)>=0);
 }
 /* index of a message that suits this moment, avoiding the one sent last time */
@@ -2056,7 +2058,7 @@ function freqPicker(r,onChange){
     b.onclick=()=>{r.freq=f;[...wrap.children].forEach(c=>c.setAttribute("aria-pressed",String(c===b)));onChange&&onChange();};wrap.append(b);});
   return wrap;
 }
-/* ---------- go-live: install, offline, counter, files, calendar reminders ---------- */
+/* ---------- go-live: install, offline, counter, files ---------- */
 const SITE_HOST="everfaithful.app";
 const COUNTER_URL="https://everfaithful.goatcounter.com/count";
 const isStandalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){return false;}};
@@ -2138,46 +2140,13 @@ function openInstallHelp(){
       step(3,"Tap <b>Install</b>. It will appear on your home screen.")];
   openScrim(el("div",{class:"sheet",role:"dialog","aria-modal":"true","aria-label":"Add to your home screen"},
     el("div",{class:"sheet-head"},el("h2",{text:"Add to your home screen"}),closeBtn()),
-    el("p",{class:"muted",style:"margin:-6px 0 0",text:"Once added, it can work without internet."}),
-    (isIOS&&realEntries().length)?el("div",{class:"banner warn",style:"margin:0"},el("div",{class:"b-body"},
-      el("strong",{text:"Back up first"}),
-      el("span",{class:"muted",text:"On iPhone, the installed app starts empty. Your entries stay here in Safari until you bring them across. Tap Back up now and save the file. Then open the new app, tap Backup and restore in the menu, and choose Restore."}),
-      el("div",{class:"b-actions"},el("button",{class:"btn primary small",text:"Back up now",onclick:()=>doBackup()})))):null,
+    el("p",{class:"muted",style:"margin:-6px 0 0",text:"Opens in one tap, works without internet and keeps your entries safer."}),
+    (isIOS&&realEntries().length)?el("div",{class:"note carry"},el("span",{html:"<b>Have entries here?</b> Back up first, then restore them in the app."}),el("button",{class:"btn primary small",text:"Back up",onclick:()=>doBackup()})):null,
     el("div",{class:"ih-steps"},...steps),
-    el("p",{class:"muted",style:"margin:0;font-size:13px",text:isIOS?"Opened the link in WhatsApp? Tap the menu there and choose Open in Safari first.":"Opened the link in WhatsApp? Tap the menu there and choose Open in Chrome first. Install it from the same browser you've been using, so your entries come with it."}),
+    el("p",{class:"muted",style:"margin:0;font-size:13px",text:isIOS?"Already on your home screen? Open it from there instead.":"Opened the link in WhatsApp? Tap the menu there and choose Open in Chrome first. Install it from the same browser you've been using, so your entries come with it."}),
     el("button",{class:"btn primary block",text:"Got it",onclick:closeLayer})));
 }
 
-/* calendar reminders */
-const RD=["SU","MO","TU","WE","TH","FR","SA"];
-function reminderStart(r){
-  const [h,m]=(r.time||"19:00").split(":").map(Number), now=new Date();
-  let s=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0);
-  if(r.freq==="daily"){ if(s<=now) s.setDate(s.getDate()+1); }
-  else if(r.freq==="weekly"){ while(s.getDay()!==Number(r.day)||s<=now) s.setDate(s.getDate()+1); }
-  else { s=new Date(now.getFullYear(),now.getMonth()+1,1,h,m,0); }
-  return s;
-}
-function reminderRule(r){ return r.freq==="daily"?"FREQ=DAILY":r.freq==="weekly"?"FREQ=WEEKLY;BYDAY="+RD[Number(r.day)]:"FREQ=MONTHLY;BYMONTHDAY=1"; }
-function reminderTitle(r){ return r.freq==="daily"?"Ever Faithful: what are you thankful for today?":r.freq==="weekly"?"Ever Faithful: what did God do this week?":"Ever Faithful: new month! What did God do last month?"; }
-const REM_DETAILS="Take 30 seconds to speak your thanks or record a testimony. Open Ever Faithful: https://everfaithful.app";
-function calStamp(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"T"+pad(d.getHours())+pad(d.getMinutes())+"00";}
-function icsText(r){
-  const s=reminderStart(r), e=new Date(s.getTime()+15*60000), now=new Date();
-  const utc=now.toISOString().replace(/[-:]/g,"").replace(/\.\d+Z$/,"Z");
-  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Ever Faithful//Reminders//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH","BEGIN:VEVENT",
-    "UID:ef-reminder-"+Date.now().toString(36)+"@everfaithful.app","DTSTAMP:"+utc,"DTSTART:"+calStamp(s),"DTEND:"+calStamp(e),"RRULE:"+reminderRule(r),
-    "SUMMARY:"+reminderTitle(r),"DESCRIPTION:"+REM_DETAILS.replace(/,/g,"\\,"),"URL:https://everfaithful.app","TRANSP:TRANSPARENT",
-    "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+reminderTitle(r),"TRIGGER:PT0M","END:VALARM","END:VEVENT","END:VCALENDAR",""].join("\r\n");
-}
-function googleCalUrl(r){
-  const s=reminderStart(r), e=new Date(s.getTime()+15*60000);
-  let tz=""; try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"";}catch(_){}
-  return "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(reminderTitle(r))+"&dates="+calStamp(s)+"/"+calStamp(e)+
-    "&recur="+encodeURIComponent("RRULE:"+reminderRule(r))+"&details="+encodeURIComponent(REM_DETAILS)+(tz?"&ctz="+encodeURIComponent(tz):"");
-}
-function addToGoogle(r){ r.calendar="google"; persist(); window.open(googleCalUrl(r),"_blank","noopener"); }
-function addToOtherCal(r){ r.calendar="ics"; persist(); downloadBlob(new Blob([icsText(r)],{type:"text/calendar"}),"EverFaithful-reminder.ics"); }
 /* ---------- app notifications (Web Push through the Ever Faithful reminder server) ---------- */
 const PUSH_API="https://everfaithful-reminders.everfaithful.workers.dev";
 function pushReady(){return !!PUSH_API&&PUSH_API.indexOf("__")!==0&&"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;}
@@ -2218,7 +2187,7 @@ async function pushTurnOn(r){
   if(Notification.permission==="denied"){openPushBlocked();return false;}
   let perm=Notification.permission;
   if(perm!=="granted"){try{perm=await Notification.requestPermission();}catch(e){perm="default";}}
-  if(perm!=="granted"){toast(perm==="denied"?"Notifications were blocked. You can use your calendar instead.":"Notifications weren't turned on.");return false;}
+  if(perm!=="granted"){toast(perm==="denied"?"Notifications were blocked. You can allow them in your phone's settings.":"Notifications weren't turned on. You can try again from the menu.");return false;}
   try{await pushSave(r);return true;}
   catch(e){toast(navigator.onLine===false?"You're offline. Connect to the internet and try again.":"Couldn't turn on notifications just now. Try again in a minute.");return false;}
 }
@@ -2239,38 +2208,31 @@ async function pushRefresh(){
   }catch(e){}
 }
 
-function reminderForm(draft,onChange){
+function reminderForm(draft){
   const daySel=el("select",{class:"inp",id:"remDay","aria-label":"Day"},...DAYS.map((d,i)=>{const o=el("option",{value:String(i),text:d});if(i===Number(draft.day))o.selected=true;return o;}));
   const timeIn=el("input",{class:"inp",id:"remTime",type:"time",value:draft.time});
   daySel.onchange=()=>{draft.day=Number(daySel.value);};
   timeIn.onchange=()=>{draft.time=timeIn.value||"19:00";};
   const dayRow=el("label",{class:"f"},"Day",daySel), timeRow=el("label",{class:"f"},"Time",timeIn);
   const rows=el("div",{class:"row2"},dayRow,timeRow);
-  const g=el("button",{class:"btn primary block",text:"Add to Google Calendar",onclick:()=>{addToGoogle(draft);onChange&&onChange("google");}});
-  const o=el("button",{class:"btn ghost block",text:isIOS?"Add to my iPhone calendar":"Add to another calendar app",onclick:()=>{addToOtherCal(draft);onChange&&onChange("ics");}});
-  const calBtns=el("div",{class:"menu-list"},...(isIOS?[o,g]:[g,o]));
-  if(isIOS){o.className="btn primary block";g.className="btn ghost block";}
-  const calNote=el("p",{class:"muted",style:"margin:0;font-size:13px",text:"Reminders come through your phone's calendar, so they arrive even when Ever Faithful is closed. Nothing is sent to us. To change or stop a reminder later, edit or delete it in your calendar."});
-  const sync=()=>{dayRow.hidden=draft.freq!=="weekly";rows.hidden=draft.freq==="open";calBtns.hidden=draft.freq==="open";calNote.hidden=draft.freq==="open";};
+  const sync=()=>{dayRow.hidden=draft.freq!=="weekly";};
   sync();
-  return {picker:freqPicker(draft,sync),rows,calBtns,calNote,sync};
+  return {picker:freqPicker(draft,sync),rows,sync};
 }
 function reminderSummary(){const r=ensureReminder();
   if(r.freq==="open") return "Not set up yet";
   const when=r.freq==="daily"?"Every day at "+fmtTime(r.time):r.freq==="weekly"?DAYS[r.day]+"s at "+fmtTime(r.time):"1st of each month at "+fmtTime(r.time);
-  return r.push?when+", as a notification":r.calendar?when+", in your calendar":"Not set up yet";}
+  return r.push?when+", as a notification":"Not set up yet";}
 function maybeAskReminder(delay){
   const r=ensureReminder(); if(r.asked) return;
   setTimeout(()=>{ if($("#layer").children.length) return; openReminderAsk(); },delay||2600);
 }
-/* one sheet for both the first ask and the settings */
+/* one sheet for both the first ask and the settings. Reminders come only as notifications. */
 function reminderSheet(first){
   const r=ensureReminder(); const draft={freq:(first||r.freq==="open")?"weekly":r.freq,day:r.day,time:r.time};
   const needInstall=pushNeedsInstall(), canPush=pushReady()&&!needInstall;
-  const calDone=(how)=>{const wasPush=r.push;Object.assign(r,draft,{asked:true,calendar:how});persist();if(wasPush)pushOff(r);closeLayer();render();toast(how==="google"?"Tap Save in Google Calendar to finish.":"Open the downloaded file to add the reminder to your calendar.");};
-  const f=reminderForm(draft,calDone);
+  const f=reminderForm(draft);
   const busy=b=>{b.disabled=true;const t=b.textContent;b.textContent="One moment…";return ()=>{b.disabled=false;b.textContent=t;};};
-  /* notifications */
   const onBtn=el("button",{class:"btn primary block",text:r.push&&!first?"Save changes":"Turn on notifications",onclick:async()=>{
     const undo=busy(onBtn); const before={freq:r.freq,day:r.day,time:r.time};
     Object.assign(r,draft,{asked:true});
@@ -2288,28 +2250,18 @@ function reminderSheet(first){
   const pushNote=el("p",{class:"muted",style:"margin:0;font-size:13px",text:"Ever Faithful sends a short, warm notification at the time you choose. To do that, our reminder service keeps an anonymous address for this phone, your reminder time and your time zone. Never your name or your entries."});
   const testBtn=el("button",{class:"btn ghost block",text:"Send me a test notification",onclick:async()=>{const undo=busy(testBtn);try{await pushApi("/test",{endpoint:r.endpoint});toast("Sent. It should arrive in a few seconds.");}catch(e){toast("Couldn't send a test just now. Try again in a minute.");}undo();}});
   const offBtn=el("button",{class:"linkbtn",style:"align-self:center",text:"Turn off notifications",onclick:async()=>{const undo=busy(offBtn);await pushOff(r);undo();r.freq="open";persist();closeLayer();render();toast("Notifications are off.");}});
-  const showCal=el("button",{class:"linkbtn",style:"align-self:center",text:"Use my calendar instead",onclick:()=>{calWrap.hidden=false;showCal.hidden=true;}});
-  const calWrap=el("div",{class:"menu-list"},f.calBtns,f.calNote);
-  const pushWrap=el("div",{class:"menu-list"},onBtn,pushNote,(r.push&&!first)?testBtn:null);
-  /* iPhone in Safari: install first */
-  const iosNote=el("div",{class:"note",html:"<b>On iPhone, notifications work once Ever Faithful is on your home screen.</b> Add it first, open it from your home screen, then come back here. Or use your calendar below."});
-  const iosBtn=el("button",{class:"btn primary block",text:"Show me how to add it",onclick:()=>{closeLayer();openInstallHelp();}});
-  const iosWrap=el("div",{class:"menu-list"},iosNote,iosBtn);
-  const keep=el("button",{class:"btn primary block",text:"Save",onclick:async()=>{Object.assign(r,draft,{asked:true});if(r.push)await pushOff(r);persist();closeLayer();render();toast(first?"Got it. We'll check in when you open the app.":"Saved. We'll check in when you open the app.");}});
-  const sync0=f.sync;
-  f.sync=()=>{sync0();const open=draft.freq==="open";
-    keep.hidden=!open; pushWrap.hidden=open||!canPush; iosWrap.hidden=open||!needInstall;
-    showCal.hidden=open||!canPush||!calWrap.hidden; if(open) calWrap.hidden=true; else if(!canPush) calWrap.hidden=false;
-    f.calBtns.hidden=false; f.calNote.hidden=false;};
-  if(needInstall) f.calBtns.querySelectorAll(".btn").forEach(b=>{b.className="btn ghost block";});
-  calWrap.hidden=canPush; f.sync();
-  f.picker.querySelectorAll("button").forEach(b=>b.addEventListener("click",f.sync));
+  let body;
+  if(canPush) body=[f.picker,f.rows,el("div",{class:"menu-list"},onBtn,pushNote,(r.push&&!first)?testBtn:null)];
+  else if(needInstall) body=[el("div",{class:"note",html:"<b>On iPhone, reminders work once Ever Faithful is on your home screen.</b> Add it, open it from your home screen, then turn on reminders there from the menu."}),
+    el("button",{class:"btn primary block",text:"Show me how to add it",onclick:()=>{closeLayer();openInstallHelp();}})];
+  else body=[el("div",{class:"note",html:"<b>This browser can't show notifications.</b> Open everfaithful.app in "+(isIOS?"Safari":"Chrome")+", then turn on reminders from the menu."})];
   const head=first?el("div",{class:"sheet-head"},el("h2",{text:"Want a gentle nudge?"}),closeBtn(()=>{r.asked=true;persist();closeLayer();}))
                   :el("div",{class:"sheet-head"},el("h2",{text:"Reminders"}),closeBtn());
   const intro=el("p",{class:"muted",style:"margin:-6px 0 0",text:first?"A short, warm reminder to stop and remember what He's done. Never guilt-tripping.":"How often should Ever Faithful check in with you?"});
-  const status=(!first&&r.push)?el("div",{class:"note ok-note",text:"Notifications are on: "+reminderSummary().split(",")[0]+"."}):(!first&&r.calendar)?el("div",{class:"note",text:"You already added a reminder to your calendar. If you change it here, delete the old one in your calendar so you don't get both."}):null;
+  const status=(!first&&r.push)?el("div",{class:"note ok-note",text:"Notifications are on: "+reminderSummary().split(",")[0]+"."})
+    :(!first&&r.calendar&&canPush)?el("div",{class:"note",text:"Reminders now come as notifications from Ever Faithful. If you added one to your calendar before, it keeps working until you delete it there."}):null;
   openScrim(el("div",{class:"sheet",role:"dialog","aria-modal":"true","aria-label":first?"Reminders":"Reminder settings"},
-    head,intro,status,f.picker,f.rows,pushWrap,iosWrap,showCal,calWrap,keep,
+    head,intro,status,...body,
     (!first&&r.push)?offBtn:null,
     first?el("button",{class:"linkbtn",style:"align-self:center",text:"Not now",onclick:()=>{r.asked=true;r.freq="open";persist();closeLayer();toast("No problem. You can set up reminders from the menu.");}}):null));
 }
@@ -2433,7 +2385,7 @@ function openHowItWorks(){
       row("t-manna",sv('<circle cx="12" cy="13" r="5"/><path d="M12 3v2M18.4 6.6 17 8M5.6 6.6 7 8"/>'),"Manna: daily thanks","The small, everyday things. Each one this month shows as a gold drop above your pile."),
       row("t-stone",sv('<ellipse cx="12" cy="18" rx="8" ry="3.2"/><ellipse cx="12" cy="11.5" rx="5.5" ry="2.6"/><ellipse cx="12" cy="6" rx="3.2" ry="1.8"/>'),"Stones: the big testimonies","The ones you never want to forget, even from years back. Each one adds a stone to your pile."),
       row("t-rem",sv('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/>'),"Remember: for hard days","Pick what you're facing and see the times God already came through.")),
-    el("p",{class:"muted",style:"margin:0;font-size:14px",text:"Everything stays on this phone. Back up now and then from the menu so you never lose it."}),
+    el("p",{class:"muted",style:"margin:0;font-size:14px",text:APP_MODE?"Everything stays on this phone. Back up now and then from the menu so you never lose it.":"Everything stays on this phone. Install the app from the menu to keep it safe."}),
     el("button",{class:"btn primary block",text:"Got it",onclick:closeLayer})));
 }
 function openMenu(){
@@ -2446,11 +2398,11 @@ function openMenu(){
     el("div",{class:"menu-list"},
       el("button",{class:"list-btn",onclick:()=>{closeLayer();openHowItWorks();},html:ico('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/>')+'<div><b>How it works</b><span>Manna, stones and Remember in one minute.</span></div>'}),
       el("p",{class:"menu-group",text:"Settings"}),
-      el("button",{class:"list-btn",onclick:()=>{closeLayer();openReminderSettings();},html:ico('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>')+'<div><b>Reminders: '+(()=>{const r=ensureReminder();return (r.push||r.calendar)&&r.freq!=="open"?FREQ_LABEL[r.freq]:"Off";})()+'</b><span>'+reminderSummary()+'. Tap to change how often we check in.</span></div>'}),
+      el("button",{class:"list-btn",onclick:()=>{closeLayer();openReminderSettings();},html:ico('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>')+'<div><b>Reminders: '+(()=>{const r=ensureReminder();return r.push&&r.freq!=="open"?FREQ_LABEL[r.freq]:"Off";})()+'</b><span>'+reminderSummary()+'. Tap to change how often we check in.</span></div>'}),
       appearanceRow(),
       el("p",{class:"menu-group",text:"Keep your entries safe"}),
       isInstalled()?null:el("button",{class:"list-btn",onclick:()=>{closeLayer();doInstall();},html:ico('<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 7v7"/><path d="m9 11 3 3 3-3"/>')+'<div><b>Install the app</b><span>Keeps your entries safer, opens in one tap and works without internet.</span></div>'}),
-      el("button",{class:"list-btn",onclick:()=>{closeLayer();openBackup();},html:ico('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>')+'<div><b>Backup and restore</b><span>Keep a copy of your entries, or bring them back on a new phone.</span></div>'}),
+      !APP_MODE?null:el("button",{class:"list-btn",onclick:()=>{closeLayer();openBackup();},html:ico('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>')+'<div><b>Backup and restore</b><span>Keep a copy of your entries, or bring them back on a new phone.</span></div>'}),
       el("button",{class:"list-btn",onclick:()=>pinOn?openPinManage():openPinSetup(),html:ico('<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>')+'<div><b>PIN lock: '+(pinOn?"On":"Off")+'</b><span>'+(pinOn?"Change or turn off your PIN.":"Ask for a 4-digit PIN when Ever Faithful opens. Good for shared phones.")+'</span></div>'}),
       el("p",{class:"menu-group",text:"Look back"}),
       el("div",{class:"list-btn",style:"flex-direction:column;align-items:flex-start;gap:10px;cursor:default"},el("div",{style:"display:flex;gap:14px;align-items:center",html:ico('<path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/>')+'<div><b>Crossover review</b><span>Your year in review: everything He did. It also appears on your home screen from mid-December.</span></div>'}),yearBtns),
@@ -2506,12 +2458,12 @@ function showForgot(host){
     if(!armed){armed=true;erase.textContent="Tap again to erase everything on this phone";erase.style.borderColor="var(--coral)";return;}
     try{localStorage.removeItem(KEY);localStorage.removeItem(PINKEY);}catch(e){}
     try{const rr=state.reminder;if(rr&&rr.push)pushOff(rr);}catch(e){}
-    state={version:2,entries:[],lastBackup:null}; $("#lockHost").innerHTML=""; document.body.classList.remove("locked"); cairnBuilt=false; render(); toast("Ever Faithful has been reset. Restore your backup from the Backup button.");
+    state={version:2,entries:[],lastBackup:null}; $("#lockHost").innerHTML=""; document.body.classList.remove("locked"); cairnBuilt=false; render(); toast(APP_MODE?"Ever Faithful has been reset. Restore your backup from Backup and restore in the menu.":"Ever Faithful has been reset.");
   }});
   host.innerHTML="";
   host.append(el("h2",{text:"Forgot your PIN?"}),
     el("p",{text:"For your privacy, a PIN can't be recovered or reset by anyone, including us."}),
-    el("p",{text:"You can erase Ever Faithful on this phone and start again. Then open the menu, tap Backup and restore, and choose Restore to bring your entries back from your backup file."}),
+    el("p",{text:APP_MODE?"You can erase Ever Faithful on this phone and start again. Then open the menu, tap Backup and restore, and choose Restore to bring your entries back from your backup file.":"You can erase Ever Faithful on this phone and start again."}),
     el("div",{style:"display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px"},erase,el("button",{class:"btn primary block",text:"Try my PIN again",onclick:showLock})));
 }
 function pinFlowHost(title){
@@ -2529,7 +2481,7 @@ function openPinSetup(){
     if(v!==first){first=null;api.shake();api.setText("Those didn't match","Choose a 4-digit PIN again.");return;}
     const salt=uid(); const hash=await hashPin(v,salt);
     try{localStorage.setItem(PINKEY,JSON.stringify({salt,hash}));}catch(e){toast("Couldn't save your PIN on this phone");return;}
-    bindKeys(null); closeLayer(); toast("PIN lock is on. Keep a backup in case you forget it.");
+    bindKeys(null); closeLayer(); toast(APP_MODE?"PIN lock is on. Keep a backup in case you forget it.":"PIN lock is on.");
   }});
   bindKeys(kp);
 }
@@ -2564,10 +2516,10 @@ function openWelcome(again){
     el("div",{class:"promise"},
       el("div",{html:ok+"<span><b>Only you can see what you write.</b> Everything is saved on this phone. We never see it. We only count how many people open Ever Faithful, never who they are or what they write. If you turn on notifications, we only know when to remind you. <a href=\"./privacy.html\">Read the privacy page</a></span>"}),
       el("div",{html:ok+"<span><b>No account, no password.</b> Speak or type, then save. If others use your phone, you can add a PIN lock from the menu.</span>"}),
-      el("div",{html:warn+"<span><b>Keep a backup.</b> Your entries live only on this phone. Now and then, open the menu and tap <b>Backup and restore</b>, then save the file somewhere safe, like WhatsApp &ldquo;Message yourself&rdquo; or Google Drive. It takes 30 seconds, and we'll remind you about once a month. <b class='keep-text'>Always back up before changing phones.</b> On a new phone, choose <b>Restore</b> and pick that file.</span>"}),
-      isInstalled()?null:el("div",{html:ok+"<span><b>Tip:</b> install Ever Faithful on your phone. It keeps your entries safer, opens in one tap and works without internet. We'll show you how.</span>"})),
+      APP_MODE?el("div",{html:warn+"<span><b>Keep a backup.</b> Your entries live only on this phone. Now and then, open the menu and tap <b>Backup and restore</b>, then save the file somewhere safe, like WhatsApp &ldquo;Message yourself&rdquo; or Google Drive. It takes 30 seconds, and we'll remind you about once a month. <b class='keep-text'>Always back up before changing phones.</b> On a new phone, choose <b>Restore</b> and pick that file.</span>"}):el("div",{html:warn+"<span><b>Install it to keep your entries safe.</b> Your entries live only on this phone. Installed, Ever Faithful opens in one tap, works without internet and lets you keep a backup so you never lose them. We'll show you how.</span>"}),
+      null),
     el("button",{class:"btn primary block",text:again?"Got it":"Begin",onclick:()=>{try{localStorage.setItem(SEEN,"1");}catch(e){}closeLayer();if(!again&&!realEntries().length)openSetupIntro();}}),
-    again?null:el("button",{class:"linkbtn",style:"align-self:center",text:"Moving from another phone? Restore your backup",onclick:()=>{try{localStorage.setItem(SEEN,"1");}catch(e){}closeLayer();render();openBackup();}}))));
+    (again||!APP_MODE)?null:el("button",{class:"linkbtn",style:"align-self:center",text:"Moving from another phone? Restore your backup",onclick:()=>{try{localStorage.setItem(SEEN,"1");}catch(e){}closeLayer();render();openBackup();}}))));
 }
 function openSetupIntro(){
   openFull(el("div",{class:"full welcome"},el("div",{class:"full-inner"},
@@ -2580,7 +2532,7 @@ function openSetupIntro(){
       el("div",{html:'<span class="dot" style="margin-top:7px"></span><span>A time He protected, healed or kept you</span>'})),
     el("button",{class:"btn primary block",text:"Let's begin",onclick:()=>{closeLayer();openRecord({setup:1});}}),
     el("button",{class:"linkbtn",style:"align-self:center",text:"Maybe later",onclick:closeLayer}),
-    el("button",{class:"linkbtn",style:"align-self:center;font-weight:600",text:"Moving from another phone? Restore your backup",onclick:()=>{closeLayer();openBackup();}}))));
+    APP_MODE?el("button",{class:"linkbtn",style:"align-self:center;font-weight:600",text:"Moving from another phone? Restore your backup",onclick:()=>{closeLayer();openBackup();}}):null)));
 }
 
 /* ---------- wire up ---------- */
@@ -2599,6 +2551,8 @@ if(!seen) openWelcome(false);
 askPersist();
 countVisit();
 try{if(new URLSearchParams(location.search).has("add")){history.replaceState(null,"",location.pathname);if(!document.body.classList.contains("locked"))setTimeout(()=>{if(!$("#layer").children.length)openRecord({type:"manna"});},500);}}catch(e){}
+/* reminder tapped while the app is already open: the service worker asks us to open the add screen */
+try{if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",ev=>{if(ev.data&&ev.data.type==="ef-add"&&!document.body.classList.contains("locked")){setView("home");setTimeout(()=>{if(!$("#layer").children.length)openRecord({type:"manna"});},300);}});if(navigator.serviceWorker.startMessages)navigator.serviceWorker.startMessages();}}catch(e){}
 setTimeout(pushRefresh,4000);
 checkSharedBackup();
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1")){

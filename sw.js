@@ -1,5 +1,5 @@
 /* Ever Faithful offline support. Bump VERSION whenever the app files change. */
-const VERSION="ef-2026-11-12-3";
+const VERSION="ef-2026-11-14-2";
 const CORE=[
   "./","./index.html","./privacy.html","./manifest.webmanifest",
   "./icons/icon.svg","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./icons/apple-touch-icon.png","./icons/favicon-32.png",
@@ -48,9 +48,14 @@ self.addEventListener("fetch",e=>{
   const url=new URL(req.url);
   if(url.origin!==self.location.origin) return;
   if(req.mode==="navigate"){
-    /* pages: try the network first so updates arrive, fall back to the saved copy when offline */
-    e.respondWith(fetch(req).then(res=>{const copy=res.clone();if(res.ok&&!url.search)caches.open(VERSION).then(c=>c.put(req,copy));return res;})
-      .catch(()=>caches.match(req,{ignoreSearch:true}).then(r=>r||caches.match("./index.html"))));
+    /* pages: open at once from the saved copy (no white screen on slow data), refresh it quietly in the background.
+       New versions still arrive: a changed sw.js installs and saves the new app files, ready for the next open. */
+    e.respondWith((async()=>{
+      const hit=await caches.match(req,{ignoreSearch:true});
+      const net=fetch(req).then(res=>{if(res.ok&&!url.search){const copy=res.clone();caches.open(VERSION).then(c=>c.put(req,copy));}return res;});
+      if(hit){e.waitUntil(net.catch(()=>{}));return hit;}
+      return net.catch(()=>caches.match("./index.html"));
+    })());
     return;
   }
   /* everything else: saved copy first, then the network */
@@ -66,7 +71,8 @@ self.addEventListener("notificationclick",e=>{
   e.notification.close();
   const url=new URL((e.notification.data&&e.notification.data.url)||"./",self.registration.scope).href;
   e.waitUntil(self.clients.matchAll({type:"window",includeUncontrolled:true}).then(list=>{
-    for(const c of list){ if(c.url.startsWith(self.registration.scope)&&"focus" in c){ if("navigate" in c) c.navigate(url).catch(()=>{}); return c.focus(); } }
+    /* app already open: bring it to the front and open the add screen, without reloading (no white flash) */
+    for(const c of list){ if(c.url.startsWith(self.registration.scope)&&"focus" in c){ try{c.postMessage({type:"ef-add"});}catch(_){} return c.focus(); } }
     return self.clients.openWindow(url);
   }));
 });
